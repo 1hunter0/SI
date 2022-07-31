@@ -45,7 +45,7 @@ submit_time = data['summary']['submit_time']
 threat_level = data['summary']['threat_level']
 threat_score = (data['summary']['threat_score'])
 multi_engines = data['summary']['multi_engines']
-print("沙箱运行环境: ")
+#print("沙箱运行环境: ")
 list_env = []
 for i in data['summary']['sandbox_type_list']: list_env.append(i)
 
@@ -62,7 +62,7 @@ for key,value in data['multiengines']['result'].items():
 
 # 行为检测
 # 严重程度1为通用行为 2位可疑行为 3位高危行为
-print('行为检测')
+#print('行为检测')
 list_behavior =[]
 for item in data['signature']:
   des = json.loads(item['description'])
@@ -82,19 +82,14 @@ values.append(threat_level)
 values.append(multi_engines)
 list_env = ",".join([str(x) for x in list_env])
 values.append(list_env)
-#print(threat_score)
 values.append(threat_score)
 list_behavior= ",".join([str(x) for x in list_behavior])
 values.append(list_behavior)
 
 list_antvir= ",".join([str(y) for y in list_antvir])
 values.append(list_antvir)
-#values.append("test1")
-#values.append("test1")
-#values.append("test1")
 valuesTuple = tuple(values)
-#print(list_antivir)
-#print(valuesTuple)
+
 # 连接数据库
 conn = pymysql.connect(
         host = 'localhost',
@@ -120,7 +115,6 @@ table = 'sandbox_file_entity'
 
 # 插入sql语句
 insertSql = 'INSERT INTO {table} VALUES ({values})'.format(table=table,  values=values)
-print(insertSql)
 #执行建表与插入sql
 #cur.execute(createTableSql)
 cur.execute(insertSql,valuesTuple)

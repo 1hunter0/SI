@@ -1,15 +1,13 @@
 
-# 准备json文件，里边内容为：{"name": "tom", "age": "28"}
-
 import json
 import pymysql
-
-
 
 #获取文件检测内容
 import json
 import requests
 #没有network响应 考虑换沙盒环境 'sandbox_type'
+#json文件 (非api版！！没用。。)keys值：info  behavior tsmam metadata screenshots static strings sigma target network signatures tags
+
 url = 'https://api.threatbook.cn/v3/file/report'
 params = {
     'apikey': '44a4838848ac4f5799d1ccf1cf18519a130f43810ee0413c9a93a9acf4ed684b',
@@ -45,7 +43,7 @@ sha1 = data['summary']['sha1']
 md5 = data['summary']['md5']
 submit_time = data['summary']['submit_time']
 threat_level = data['summary']['threat_level']
-threat_score = str(data['summary']['threat_score'])
+threat_score = (data['summary']['threat_score'])
 multi_engines = data['summary']['multi_engines']
 print("沙箱运行环境: ")
 list_env = []
@@ -79,28 +77,24 @@ values.append(sha1)
 values.append(file_name)
 values.append(file_type)
 values.append(md5)
-#values.append(submit_time)
-values.append("2232523525")
+values.append(submit_time)
 values.append(threat_level)
 values.append(multi_engines)
 list_env = ",".join([str(x) for x in list_env])
-#values.append(list_env)
+values.append(list_env)
+#print(threat_score)
 values.append(threat_score)
 list_behavior= ",".join([str(x) for x in list_behavior])
-#values.append(list_behavior)
-list_antivir= ",".join([str(x) for x in list_antvir])
-#values.append(list_antvir)
-values.append("test1")
-values.append("test1")
-values.append("test1")
+values.append(list_behavior)
+
+list_antvir= ",".join([str(y) for y in list_antvir])
+values.append(list_antvir)
+#values.append("test1")
+#values.append("test1")
+#values.append("test1")
 valuesTuple = tuple(values)
-print(list_antivir)
-#json文件 (非api版！！没用。。)keys值：info  behavior tsmam metadata screenshots static strings sigma target network signatures tags
-
-values.append("test1")
-values.append("test1")
-values.append("test1")
-
+#print(list_antivir)
+#print(valuesTuple)
 # 连接数据库
 conn = pymysql.connect(
         host = 'localhost',

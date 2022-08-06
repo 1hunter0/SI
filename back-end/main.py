@@ -1,15 +1,13 @@
 import uvicorn
 from fastapi import FastAPI
-from starlette.responses import RedirectResponse
+from app.database import Base, engine
+from app.api import router_ip
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-#根据搜索内容重定向数据
-app.get("search/{data}")
-def parse(data):
-    # response = RedirectResponse(url=url)
-    # return response
-    return {"hello world"}
+app.include_router(router_ip)
 
 if __name__ == '__main__':
     uvicorn.run(app, host="127.0.0.1", port=8000)

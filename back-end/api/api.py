@@ -9,15 +9,24 @@ async def getURL(url):
 
 
 @router.get("/ip/{ip}")
-async def getURL(ip):
+async def getIP(ip):
     return {}
 
 
 @router.get("/dns/{dns}")
-async def getURL(ip):
+async def getDNS(ip):
     return {}
 
 
 @router.get("/file/{file}")
-async def getURL(file):
+async def getFile(file):
+    return {}
+
+
+@router.get("/graph/open/{name}")
+async def getOpenInformation(file):
+    return {}
+
+@router.get("/graph/innear/{name}")
+async def getinnearInformation(file):
     return {}

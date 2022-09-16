@@ -1,0 +1,18 @@
+[
+  {
+    "sha256": "文件hash",
+    "sha1": "文件hash",
+    "md5": "文件md5",
+    "name": "文件名称",
+    "size": "文件大小",
+    "severity": "威胁等级",
+    "confidence": "置信度",
+    "net_ip": "通信ip",
+    "net_url": "通信url",
+    "net_domain": "通信域名",
+    "samples": "释放样本",
+    "multiengines": "引擎扫描结果",
+    "pstree": "进程行为",
+    "tags..": "其他tag"
+  }
+]

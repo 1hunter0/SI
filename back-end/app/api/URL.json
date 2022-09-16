@@ -1,0 +1,8 @@
+[
+  {
+    "url": "url",
+    "severity": "威胁等级",
+    "confidence": "置信度",
+    "tags..": "其他tag"
+  }
+]

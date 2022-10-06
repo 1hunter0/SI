@@ -24,8 +24,10 @@ class IP(BaseModel):
     latitude: float
     longitude: float
 
+
 class IP_threat(BaseModel):
-    #to do
+    #todo
+    pass
 
 
 

@@ -2,7 +2,7 @@ from app.api.api_ip import router_ip
 from app.api.api_url import router_url
 from app.api.api_dns import router_dns
 from app.api.api_file import router_file
-
+from app.api.api_user import router_user
 
 # router = APIRouter()
 

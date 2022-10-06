@@ -4,3 +4,4 @@ venv/
 .env
 */*/__pycache--
 back-end/api/__pycache__/__init__.cpython-37.pyc
+*.ini

@@ -1,5 +1,6 @@
 import datetime
 from typing import Union
+from typing import List
 from pydantic import BaseModel
 import decimal
 
@@ -44,8 +45,8 @@ class Alarm(AlarmBase):
 
 
 class IpInner(IpBase):
-    subject_alarms: list[Alarm] = []
-    object_alarms: list[Alarm] = []
+    subject_alarms: List[Alarm] = []
+    object_alarms: List[Alarm] = []
 
     class Config:
         orm_mode = True

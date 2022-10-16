@@ -1,0 +1,19 @@
+[
+  {
+    "domain": "域名",
+    "cur_ip": "当前解析的ip地址",
+    "country": "国家",
+    "province": "省份",
+    "city": "城市",
+    "isp": "服务商信息",
+    "latitude": "纬度",
+    "longitude": "经度",
+    "cur_whois": "当前whois信息",
+    "severity": "威胁等级",
+    "samples": "相关样本",
+    "confidence": "置信度",
+    "scene": "应用场景",
+    "open_source": "开源情报",
+    "tags..": "其他tag"
+  }
+]

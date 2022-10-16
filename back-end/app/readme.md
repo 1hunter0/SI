@@ -23,3 +23,15 @@
 - dependencies.py：依赖注入相关代码。
 
 - database.py：数据库相关
+
+### 提醒
+若使用到了新的库、第三方包，使用pipreqs重新生成requirements.txt。
+```shell
+pip install pipreqs # 安装pipreqs
+
+pipreqs . --encoding=utf-8 --force # 强制重新生成requirements.txt
+```
+若有新的包没有安装，则执行：
+```shell
+pip install -r requirements.txt
+```

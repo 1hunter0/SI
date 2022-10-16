@@ -6,8 +6,8 @@ graph = Graph('bolt://localhost:7687',auth='neo4j',password='123456')
 
 #实体：进程 ip 域名 dns
 #关系：启动 连接 释放（暂无） [域名]解析[ip]
-def create_process_node(name1,pid,comline):
-  process=Node('进程',pid=pid,comline=comline)
+def create_process_node(name,pid,comline):
+  process=Node('进程',name=name,pid=pid,comline=comline)
   graph.create(process)
   return process
   

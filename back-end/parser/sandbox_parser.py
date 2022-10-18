@@ -8,12 +8,15 @@ import requests
 #没有network响应 考虑换沙盒环境 'sandbox_type'
 #json文件 (非api版！！没用。。)keys值：info  behavior tsmam metadata screenshots static strings sigma target network signatures tags
 
+#  b4b1dddc9bd36478b675c35e4d881443a2196043ddfbb88fb433cfb79c84b69a
 url = 'https://api.threatbook.cn/v3/file/report'
+print("请输入文件sha256值:")
+sha = input()
 params = {
     'apikey': '44a4838848ac4f5799d1ccf1cf18519a130f43810ee0413c9a93a9acf4ed684b',
     #'sandbox_type': 'win10_sp1_enx86_office2016',
     #'query_fields':'network',
-    'sha256': 'b4b1dddc9bd36478b675c35e4d881443a2196043ddfbb88fb433cfb79c84b69a'
+    'sha256': sha
 }
 response = requests.get(url, params=params)
 data =response.json()

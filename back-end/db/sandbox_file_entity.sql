@@ -25,7 +25,7 @@ CREATE TABLE `sandbox_file_entity`  (
   `file_name` varchar(255) CHARACTER SET utf8mb4 NULL DEFAULT NULL,
   `file_type` varchar(255) CHARACTER SET utf8mb4 NULL DEFAULT NULL,
   `md5` varchar(255) CHARACTER SET utf8mb4 NULL DEFAULT NULL,
-  `submit_time` timestamp NOT NULL COMMENT '提交时间时间',
+  `submit_time` timestamp NOT NULL COMMENT '提交时间',
   `threat_level` varchar(255) CHARACTER SET utf8mb4 NULL DEFAULT NULL COMMENT '威胁等级',
   `multi_engines` varchar(255) CHARACTER SET utf8mb4 NULL DEFAULT NULL COMMENT '反病毒扫描引擎检出率',
   `sandbox_type_list` varchar(255) CHARACTER SET utf8mb4 NULL DEFAULT NULL COMMENT '沙箱运行环境',

@@ -3,7 +3,7 @@ from sqlalchemy import Column, DECIMAL, ForeignKey, Integer, TIMESTAMP
 from sqlalchemy.dialects.mysql import VARCHAR
 from sqlalchemy.orm import relationship
 from app.database import Base
-from model_dns import DnsEntity
+
 
 class IpAlarmEvent(Base):
     __tablename__ = 'ip_alarm_event'

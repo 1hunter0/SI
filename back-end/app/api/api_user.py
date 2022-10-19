@@ -61,3 +61,21 @@ def info(token: str, db: Session = Depends(get_db)):
         ErrCode=SUCCESS,
         Data=schema_user.UserInfo(username=user.username)
     )
+
+
+@router_user.post("/register", response_model=schema_response.MyResponse)
+def register(LoginForm: schema_user.LoginIn, response: Response, db: Session = Depends(get_db)):
+    username, password = LoginForm.username, LoginForm.password
+    user = crud_user.get_user(db, username)
+    if user:
+        # response.status_code = status.HTTP_404_NOT_FOUND
+        return schema_response.MyResponse(ErrCode=FAIL, ErrMessage="用户名已存在")
+
+    user = crud_user.create_user(db, username, password)
+    if not user:
+        # response.status_code = status.HTTP_404_NOT_FOUND
+        return schema_response.MyResponse(ErrCode=FAIL, ErrMessage="注册失败")
+    return schema_response.MyResponse(
+        ErrCode=SUCCESS,
+        Data=schema_user.UserInfo(username=user.username)
+    )

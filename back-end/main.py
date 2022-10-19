@@ -28,8 +28,8 @@ app.include_router(router_user)
 @app.middleware("http")
 async def check_token(request: Request, call_next):
     path: str = request.get('path')
-    if path.startswith('/users/login') | path.startswith('/users/info') | path.startswith(
-            '/docs') | path.startswith('/openapi.json'):  # docs文档接口需要排除，登录接口需要排除
+    if path.startswith('/users/login') | path.startswith('/users/info')|path.startswith('/users/register') | path.startswith(
+            '/docs') | path.startswith('/openapi.json'):  # docs文档接口需要排除，登录接口需要排除,注册借口需要排除
         response = await call_next(request)
         return response
     else:

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models import model_ip
+from app.models import models as model_ip
 from app.schemas import schema_ip
 
 

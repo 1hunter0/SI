@@ -2,9 +2,7 @@
 from sqlalchemy import Column, DECIMAL, ForeignKey, Integer, String, TIMESTAMP
 from sqlalchemy.dialects.mysql import TINYINT, VARCHAR
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from app.database import Base
 metadata = Base.metadata
 
 

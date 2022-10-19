@@ -49,5 +49,3 @@ class IpEntity(Base):
 
     subject_alarms = relationship("IpAlarmEvent", back_populates="ip_subject_entity", foreign_keys=[IpAlarmEvent.ip_subject])
     object_alarms = relationship("IpAlarmEvent", back_populates="ip_object_entity", foreign_keys=[IpAlarmEvent.ip_object])
-    ip_dns_analysis = relationship('DnsEntity', back_populates="analysis_ip_entity", foreign_keys=[DnsEntity.analysis_ip])
-    ip_dns_history = relationship('DnsEntity', back_populates='history_ip_entity', foreign_keys=[DnsEntity.history_ip])

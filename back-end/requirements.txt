@@ -11,4 +11,5 @@ SQLAlchemy==1.4.39
 uvicorn==0.18.2
 SQLAlchemy-Utils==0.38.3
 bcrypt == 4.0.1
+python-multipart == 0.0.5
 

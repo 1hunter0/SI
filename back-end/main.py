@@ -13,7 +13,6 @@ from jose import jwt
 import app.utils as utils
 from app.global_variable import *
 
-
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -28,7 +27,8 @@ app.include_router(router_user)
 @app.middleware("http")
 async def check_token(request: Request, call_next):
     path: str = request.get('path')
-    if path.startswith('/users/login') | path.startswith('/users/info')|path.startswith('/users/register') | path.startswith(
+    if path.startswith('/users/login') | path.startswith('/users/info') | path.startswith(
+            '/users/register') | path.startswith(
             '/docs') | path.startswith('/openapi.json'):  # docs文档接口需要排除，登录接口需要排除,注册借口需要排除
         response = await call_next(request)
         return response
@@ -59,6 +59,7 @@ async def check_token(request: Request, call_next):
                     ErrMessage="token验证失败"
                 ))
             )
+
 
 if __name__ == '__main__':
     uvicorn.run(app, host="127.0.0.1", port=8000)

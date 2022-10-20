@@ -45,6 +45,7 @@ def filehelper(data: dict):
 def get_file(sha1: str, db: Session = Depends(get_db)):
     print(sha1)
     file_info = crud_file.get_file_info(db, sha1)
+    print(file_info)
     if file_info:
         return schema_response.MyResponse(
             ErrCode=SUCCESS,

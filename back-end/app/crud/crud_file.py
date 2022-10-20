@@ -5,7 +5,8 @@ from app.schemas import schema_file
 
 def get_file_info(db: Session, sha1: str):
     try:
-        return db.query(model_file.SandboxFileEntity).filter(model_file.SandboxFileEntity.sha1 == sha1).first()
+        ans = db.query(model_file.SandboxFileEntity).filter(model_file.SandboxFileEntity.sha1 == sha1).first()
+        return ans
     except Exception as e:
         print(e)
 

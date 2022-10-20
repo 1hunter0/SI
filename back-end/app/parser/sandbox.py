@@ -11,7 +11,7 @@ class SandBox:
         self.apikey = SANDBOX_APIKEY
         self.param = {
             'apikey': self.apikey,
-            'sha256': sha1
+            'sha1': sha1
         }
 
     def parser(self):
@@ -84,6 +84,6 @@ class SandBox:
 
 
 if __name__ == '__main__':
-    sha1 = 'b4b1dddc9bd36478b675c35e4d881443a2196043ddfbb88fb433cfb79c84b69a'
+    sha1 = '9a6df3a428fa48f1605edd636c985fcc82d9293d'
     ans = SandBox(sha1).parser()
     print(ans)

@@ -75,7 +75,7 @@ class IpAlarmEvent(Base):
     hostname = Column(VARCHAR(255), nullable=False, comment='告警来源ip')
     timestamp = Column(TIMESTAMP, nullable=False, comment='告警发生时间')
     attack_stage = Column(VARCHAR(255), comment='攻击阶段')
-    attack_status = Column(Integer, comment='攻击状态')
+    attack_status = Column(VARCHAR(255), comment='攻击状态')
     dev_category = Column(VARCHAR(255), comment='触发告警的规则类型')
     dev_rule = Column(VARCHAR(255), comment='触发告警的规则')
     degree = Column(VARCHAR(255), comment='程度')

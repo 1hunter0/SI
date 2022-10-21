@@ -29,7 +29,7 @@ CREATE TABLE `ip_alarm_event`  (
   `hostname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '告警来源ip',
   `timestamp` timestamp NOT NULL COMMENT '告警发生时间',
   `attack_stage` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '攻击阶段',
-  `attack_status` int NULL DEFAULT NULL COMMENT '攻击状态',
+  `attack_status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '攻击状态',
   `dev_category` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '触发告警的规则类型',
   `dev_rule` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '触发告警的规则',
   `degree` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '程度',

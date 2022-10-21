@@ -25,6 +25,16 @@ def create_alarm(db: Session, alarm: schema_ip.Alarm):
 
 def create_ip(db: Session, ip: schema_ip.IpBase):
     db_ip = model_ip.IpEntity()
+    crrip = get_inner_ip(db, ip.ip)
+    if crrip:
+        if crrip.country is None:
+            try:
+                db_ip = db.query(model_ip.IpEntity).filter(model_ip.IpEntity.ip == ip).update(ip.dict())
+                db.commit()
+                db.refresh(db_ip)
+            except Exception as e:
+                print(e)
+        return db_ip
     for k, v in ip.dict().items():
         setattr(db_ip, k, v)
     try:
@@ -34,5 +44,3 @@ def create_ip(db: Session, ip: schema_ip.IpBase):
     except Exception as e:
         print(e)
     return db_ip
-
-

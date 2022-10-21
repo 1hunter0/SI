@@ -6,7 +6,7 @@ import decimal
 
 
 class IpBase(BaseModel):
-    ip: str
+    ip: Union[str, None] = None
     country: Union[str, None] = None
     province: Union[str, None] = None
     city: Union[str, None] = None
@@ -16,17 +16,17 @@ class IpBase(BaseModel):
 
 
 class AlarmBase(BaseModel):
-    event_id: int
-    ip_subject: str
-    ip_object: str
-    dev_info: str
-    hostname: str
-    timestamp: datetime.datetime
+    event_id: Union[int, None] = None
+    ip_subject: Union[str, None] = None
+    ip_object: Union[str, None] = None
+    dev_info: Union[str, None] = None
+    hostname: Union[str, None] = None
+    timestamp: Union[str, None] = None
 
 
 class Alarm(AlarmBase):
     attack_stage: Union[str, None] = None
-    attack_status: Union[int, None] = None
+    attack_status: Union[str, None] = None
     dev_category: Union[str, None] = None
     dev_rule: Union[str, None] = None
     degree: Union[str, None] = None

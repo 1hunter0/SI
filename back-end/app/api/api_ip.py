@@ -2,10 +2,15 @@ import datetime
 import json
 from typing import List
 from fastapi import APIRouter, Depends, UploadFile
-from app.schemas import schema_ip
+from pymysql import IntegrityError
+
+import app.models.models
+from app.schemas import schema_ip, schema_response, schema_url, schema_dns
 from sqlalchemy.orm import Session
 from app.dependencies import get_db
 from app.crud import crud_ip
+from app.global_variable import *
+from app.parser import innerparser
 
 router_ip = APIRouter(
     prefix="/ips",
@@ -20,17 +25,56 @@ def get_inner_ip(ip: str):
     ip_info = json.load(open('app/api/IP.json', 'r', encoding="utf-8"))
     return ip_info
 
+
 ################
 
+@router_ip.get("/info", response_model=schema_response.MyResponse)
+def get_file(ip: str, db: Session = Depends(get_db)):
+    print(ip)
+    ip_info = crud_ip.get_inner_ip(db, ip)
+    if not ip_info:
+        return schema_response.MyResponse(
+            ErrCode=FAIL,
+            ErrMessage="数据库中未找到相关IP"
+        )
+    return schema_response.MyResponse(
+        ErrCode=SUCCESS,
+        Data=ip_info
+    )
 
-# @router_ip.get("/inner/{ip}", response_model=schema_ip.IpInner)
-# def get_inner_ip(ip: str, db: Session = Depends(get_db)):
-#     db_ip = crud_ip.get_inner_ip(db, ip)
-#     return db_ip
-#
-#
-# @router_ip.post("/upload", response_model=dict)
-# def create_alarms_by_file(file: UploadFile, db: Session = Depends(get_db)):
+
+@router_ip.post("/upload", response_model=schema_response.MyResponse)
+def create_alarms_by_file(file: UploadFile, db: Session = Depends(get_db)):
+    print(file.filename)
+    create_ip_num = 0
+    create_alarm_num = 0
+    for line in file.file:
+        data = json.loads(line)
+        dataParser = innerparser.InnerParser(data)
+        for ip_ in dataParser.ip:
+            if ip_.ip is not None:
+                try:
+                    ipinfo = crud_ip.create_ip(db, ip_)
+                    if ipinfo.ip:
+                        create_ip_num += 1
+                except Exception as e:
+                    print(e)
+        if dataParser.ip_alarm is not None:
+            try:
+                alarminfo = crud_ip.create_alarm(db, dataParser.ip_alarm)
+                if alarminfo.ip_object:
+                    create_alarm_num += 1
+            except Exception as e:
+                print(e)
+
+        """
+        todo: dns+url
+        """
+    message = "插入ip:" + str(create_ip_num) + "插入alarm:" + str(create_alarm_num)
+    return schema_response.MyResponse(
+        ErrCode=SUCCESS,
+        Data=message
+    )
 #     add_dict = {
 #         'ip_list': [],
 #         'alarm_list': []

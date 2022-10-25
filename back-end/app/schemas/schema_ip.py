@@ -21,7 +21,7 @@ class AlarmBase(BaseModel):
     ip_object: Union[str, None] = None
     dev_info: Union[str, None] = None
     hostname: Union[str, None] = None
-    timestamp: Union[str, None] = None
+    timestamp: datetime.datetime
 
 
 class Alarm(AlarmBase):

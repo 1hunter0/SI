@@ -5,6 +5,8 @@ from jose import JWTError, jwt
 
 from datetime import datetime, timedelta
 
+from sqlalchemy.orm import class_mapper
+
 SECRET_KEY = "34b07e82a13f987e00150782965d59e196376a9bc8ad2a6fbdf33830749ae4a2"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -52,7 +54,14 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
+def serialize(model):
+    """Transforms a model into a dictionary which can be dumped to JSON."""
+    # first we get the names of all the columns on your model
+    columns = [c.key for c in class_mapper(model.__class__).columns]
+    # then we return their values in a dict
+    return dict((c, getattr(model, c)) for c in columns)
+
+
 if __name__ == '__main__':  # 测试
     print(get_password_hash("123456"))
     print(verify_password("123456", "$2b$12$DYN8BofHRXwFdVkG.QQH1uG5PnHeEVFhTT.Nq1.HU3LKQtBEC4KWG"))
-

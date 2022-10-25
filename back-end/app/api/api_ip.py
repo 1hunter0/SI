@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, UploadFile
 from pymysql import IntegrityError
 
 import app.models.models
+import model.models
 from app.schemas import schema_ip, schema_response, schema_url, schema_dns
 from sqlalchemy.orm import Session
 from app.dependencies import get_db
@@ -27,11 +28,25 @@ def get_inner_ip(ip: str):
 
 
 ################
+from app.utils import serialize
+
+
+def model2alarmlist(ipalarm):
+    alarmlist = []
+    for alarm in ipalarm:
+        thedict = serialize(alarm)
+        alarmlist.append(schema_ip.Alarm(**thedict))
+    return alarmlist
+
 
 @router_ip.get("/info", response_model=schema_response.MyResponse)
 def get_file(ip: str, db: Session = Depends(get_db)):
     print(ip)
     ip_info = crud_ip.get_inner_ip(db, ip)
+    ipalarm_sub, ipalarm_obj = crud_ip.get_ip_relevant_alarm(db, ip)
+    sub_list = model2alarmlist(ipalarm_sub)
+    obj_list = model2alarmlist(ipalarm_obj)
+    alarm_list = schema_ip.IpInner(subject_alarms=sub_list, object_alarms=obj_list, **serialize(ip_info))
     if not ip_info:
         return schema_response.MyResponse(
             ErrCode=FAIL,
@@ -39,7 +54,7 @@ def get_file(ip: str, db: Session = Depends(get_db)):
         )
     return schema_response.MyResponse(
         ErrCode=SUCCESS,
-        Data=ip_info
+        Data=alarm_list
     )
 
 

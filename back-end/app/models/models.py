@@ -53,8 +53,10 @@ class DnsEntity(Base):
     __tablename__ = 'dns_entity'
 
     dns = Column(String(255), primary_key=True)
-    analysis_ip = Column(ForeignKey('ip_entity.ip', ondelete='SET NULL', onupdate='RESTRICT'), index=True, comment='解析ip')
-    related_url = Column(ForeignKey('url_entity.url', ondelete='SET NULL', onupdate='RESTRICT'), index=True, comment='相关url')
+    analysis_ip = Column(ForeignKey('ip_entity.ip', ondelete='SET NULL', onupdate='RESTRICT'), index=True,
+                         comment='解析ip')
+    related_url = Column(ForeignKey('url_entity.url', ondelete='SET NULL', onupdate='RESTRICT'), index=True,
+                         comment='相关url')
     severity = Column(TINYINT, comment='威胁等级')
     sample = Column(String(255), comment='相关样本')
     confidence = Column(String(255), comment='置信度')
@@ -69,8 +71,10 @@ class IpAlarmEvent(Base):
     __tablename__ = 'ip_alarm_event'
 
     event_id = Column(Integer, primary_key=True)
-    ip_subject = Column(ForeignKey('ip_entity.ip', ondelete='RESTRICT', onupdate='RESTRICT'), nullable=False, index=True, comment='攻击者ip')
-    ip_object = Column(ForeignKey('ip_entity.ip', ondelete='RESTRICT', onupdate='RESTRICT'), nullable=False, index=True, comment='受害者ip')
+    ip_subject = Column(ForeignKey('ip_entity.ip', ondelete='RESTRICT', onupdate='RESTRICT'), nullable=False,
+                        index=True, comment='攻击者ip')
+    ip_object = Column(ForeignKey('ip_entity.ip', ondelete='RESTRICT', onupdate='RESTRICT'), nullable=False, index=True,
+                       comment='受害者ip')
     dev_info = Column(VARCHAR(255), nullable=False, comment='告警来源设备')
     hostname = Column(VARCHAR(255), nullable=False, comment='告警来源ip')
     timestamp = Column(TIMESTAMP, nullable=False, comment='告警发生时间')

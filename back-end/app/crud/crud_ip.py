@@ -10,6 +10,15 @@ def get_inner_ip(db: Session, ip: str):
         print(e)
 
 
+def get_ip_relevant_alarm(db: Session, ip: str):
+    try:
+        query_res_sub = db.query(model_ip.IpAlarmEvent).filter(model_ip.IpAlarmEvent.ip_subject == ip).all()
+        query_res_obj = db.query(model_ip.IpAlarmEvent).filter(model_ip.IpAlarmEvent.ip_object == ip).all()
+        return query_res_sub, query_res_obj
+    except Exception as e:
+        print(e)
+
+
 def create_alarm(db: Session, alarm: schema_ip.Alarm):
     db_alarm = model_ip.IpAlarmEvent()
     for k, v in alarm.dict().items():

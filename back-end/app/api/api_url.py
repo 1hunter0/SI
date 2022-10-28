@@ -1,17 +1,23 @@
 import datetime
 import json
 from typing import List
+from app.schemas import  schema_response
 from fastapi import APIRouter, Depends, UploadFile
 from app.schemas import schema_ip
 from sqlalchemy.orm import Session
 from app.dependencies import get_db
 from app.crud import crud_ip
-
+import requests,json
+from app.global_variable import *
 router_url = APIRouter(
     prefix="/urls",
     tags=["urls"]
 )
-
+fake_url = {}
+# 读打开文件
+with open('app/api/fake_url.json', encoding='utf-8') as a:
+    # 读取文件
+    fake_url = json.load(a)
 ###############
 # dev
 @router_url.get("/inner/{url}")
@@ -20,7 +26,18 @@ def get_inner_url(url: str):
     return url_info
 
 ################
-
+@router_url.get("/info", response_model=schema_response.MyResponse)
+def get_url(url: str, db: Session = Depends(get_db)):
+    url = "https://api.threatbook.cn/v3/url/report"
+    params = {
+    "apikey": "44a4838848ac4f5799d1ccf1cf18519a130f43810ee0413c9a93a9acf4ed684b",
+    "url": url
+    }
+    response = requests.get(url, params=params)
+    return schema_response.MyResponse(
+        ErrCode=SUCCESS,
+        Data=fake_url['data']
+    )
 #
 # @router_ip.get("/inner/{ip}", response_model=schema_ip.IpInner)
 # def get_inner_ip(ip: str, db: Session = Depends(get_db)):

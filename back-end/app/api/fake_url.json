@@ -1,0 +1,56 @@
+{
+    "response_code": 0,
+    "data": {
+      "multiengines": {      
+        "threatbook": "safe",
+        "Google Safebrowsing": "safe"
+      },
+      "threat_level": "clean",
+      "sandbox": {
+        "threat_level": "clean", 
+        "submit_time": "2018-11-20 14:29:32",
+        "file_name": "微步在线云沙箱.html",     
+        "file_type": "HTML Document",    
+        "sample_sha256": "{sha256}",     
+        "tag": [      
+          "html"
+        ],
+        "sb_status": "OK",
+        "sandbox_type": "win7_sp1_enx86_office2013",      
+        "sandbox_type_list": ["win7_sp1_enx86_office2013","win7_sp1_enx86_office2007"]    
+      },
+      "details": {        
+        "headers": {
+          "Accept-Ranges": "bytes",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Server": "nginx/1.12.2",
+          "ETag": "\"5beea947-811\"",
+          "Connection": "keep-alive",
+          "Last-Modified": "Fri, 16 Nov 2018 11:25:59 GMT",
+          "Content-Length": "2065",
+          "Date": "Tue, 20 Nov 2018 06:29:32 GMT",
+          "Content-Type": "text/html"
+        },
+        "lastSeen": "2018-11-20 14:29:32",
+        "ip": "106.75.64.213",
+        "historyScans": [     
+          {
+            "fileName": "432faa64bde1e592c1d5ea18bbed73f03b5a7f85638d5a4c0b66c9ed50c25551-1599703394",       
+            "sha256":"432faa64bde1e592c1d5ea18bbed73f03b5a7f85638d5a4c0b66c9ed50c25551",  
+            "multiEngines": "0/22",       
+            "fileType": "HTML Document"       
+          }
+        ],
+        "finalUrl": "https://s.threatbook.cn",
+        "url": "https://s.threatbook.cn",
+        "sha256s": [      
+          "d68d4478****",
+          "d90446fd****"
+        ],
+        "status": 3,
+        "httpStatusCode": 200
+      }
+    },
+    "verbose_msg": "OK"
+  }
+  

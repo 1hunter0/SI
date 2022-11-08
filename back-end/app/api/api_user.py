@@ -63,6 +63,15 @@ def info(token: str, db: Session = Depends(get_db)):
     )
 
 
+@router_user.post("/logout", response_model=schema_response.MyResponse)
+def logout():
+    # todo 是否需要额外的操作，删除对应的token
+    print("登出")
+    return schema_response.MyResponse(
+        ErrCode=SUCCESS,
+    )
+
+
 @router_user.post("/register", response_model=schema_response.MyResponse)
 def register(LoginForm: schema_user.LoginIn, response: Response, db: Session = Depends(get_db)):
     username, password = LoginForm.username, LoginForm.password

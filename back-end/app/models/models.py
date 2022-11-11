@@ -15,8 +15,8 @@ class User(Base):
 
 class IpEntity(Base):
     __tablename__ = 'ip_entity'
-
-    ip = Column(VARCHAR(255), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    ip = Column(VARCHAR(255))
     country = Column(VARCHAR(255))
     province = Column(VARCHAR(255))
     city = Column(VARCHAR(255))
@@ -27,8 +27,8 @@ class IpEntity(Base):
 
 class SandboxFileEntity(Base):
     __tablename__ = 'sandbox_file_entity'
-
-    sha1 = Column(VARCHAR(255), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    sha1 = Column(VARCHAR(255))
     file_name = Column(VARCHAR(255))
     file_type = Column(VARCHAR(255))
     md5 = Column(VARCHAR(255))
@@ -43,19 +43,19 @@ class SandboxFileEntity(Base):
 
 class UrlEntity(Base):
     __tablename__ = 'url_entity'
-
-    url = Column(String(255), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    url = Column(String(255))
     history_dns = Column(VARCHAR(255), index=True, comment='历史dns')
     severity = Column(TINYINT, comment='威胁等级')
 
 
 class DnsEntity(Base):
     __tablename__ = 'dns_entity'
-
-    dns = Column(String(255), primary_key=True)
-    analysis_ip = Column(ForeignKey('ip_entity.ip', ondelete='SET NULL', onupdate='RESTRICT'), index=True,
+    id = Column(Integer, primary_key=True)
+    dns = Column(String(255))
+    analysis_ip = Column(ForeignKey('ip_entity.id', ondelete='SET NULL', onupdate='RESTRICT'), index=True,
                          comment='解析ip')
-    related_url = Column(ForeignKey('url_entity.url', ondelete='SET NULL', onupdate='RESTRICT'), index=True,
+    related_url = Column(ForeignKey('url_entity.id', ondelete='SET NULL', onupdate='RESTRICT'), index=True,
                          comment='相关url')
     severity = Column(TINYINT, comment='威胁等级')
     sample = Column(String(255), comment='相关样本')

@@ -3,6 +3,7 @@ from sqlalchemy import Column, DECIMAL, ForeignKey, Integer, String, TIMESTAMP
 from sqlalchemy.dialects.mysql import TINYINT, VARCHAR
 from sqlalchemy.orm import relationship
 from app.database import Base
+
 metadata = Base.metadata
 
 
@@ -13,10 +14,11 @@ class User(Base):
     username = Column(String(255))
     password = Column(String(255))
 
+
 class IpEntity(Base):
     __tablename__ = 'ip_entity'
     id = Column(Integer, primary_key=True)
-    ip = Column(VARCHAR(255))
+    ip = Column(VARCHAR(255), unique=True)
     country = Column(VARCHAR(255))
     province = Column(VARCHAR(255))
     city = Column(VARCHAR(255))

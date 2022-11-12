@@ -9,4 +9,3 @@ class MyResponse(BaseModel):
     ErrMessage: Union[str, None] = None
 
 
-

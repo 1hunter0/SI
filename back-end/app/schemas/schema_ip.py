@@ -3,6 +3,7 @@ from typing import Union
 from typing import List
 from pydantic import BaseModel
 import decimal
+from .schema_file import FileBase
 
 
 class IpBase(BaseModel):
@@ -21,7 +22,7 @@ class AlarmBase(BaseModel):
     ip_object: Union[str, None] = None
     dev_info: Union[str, None] = None
     hostname: Union[str, None] = None
-    timestamp: datetime.datetime
+    timestamp: datetime.datetime = None
 
 
 class Alarm(AlarmBase):
@@ -44,9 +45,25 @@ class Alarm(AlarmBase):
         orm_mode = True
 
 
-class IpInner(IpBase):
+class IpInner(BaseModel):
     subject_alarms: List[Alarm] = []
     object_alarms: List[Alarm] = []
 
     class Config:
         orm_mode = True
+
+
+class IPInfoResponse(BaseModel):
+    IpInfo: IpBase = None
+    Alarms: IpInner = None
+    Samples: FileBase = None
+
+
+class IpListResponse(BaseModel):
+    PageNumber: int
+    CurrentPage: int
+    IPList: List[IpBase] = []
+
+
+class PageResponse(BaseModel):
+    PageNumber: int

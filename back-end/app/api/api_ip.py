@@ -1,5 +1,6 @@
 import datetime
 import json
+import math
 from typing import List
 from fastapi import APIRouter, Depends, UploadFile
 from pymysql import IntegrityError
@@ -41,12 +42,22 @@ def model2alarmlist(ipalarm):
 
 @router_ip.get("/info", response_model=schema_response.MyResponse)
 def get_file(ip: str, db: Session = Depends(get_db)):
+    """
+    单个ip的详细信息，包括相关告警以及相关样本
+    :param ip:
+    :param db:
+    :return:
+    """
     print(ip)
     ip_info = crud_ip.get_inner_ip(db, ip)
     ipalarm_sub, ipalarm_obj = crud_ip.get_ip_relevant_alarm(db, ip)
     sub_list = model2alarmlist(ipalarm_sub)
     obj_list = model2alarmlist(ipalarm_obj)
-    alarm_list = schema_ip.IpInner(subject_alarms=sub_list, object_alarms=obj_list, **serialize(ip_info))
+    alarm_list = schema_ip.IpInner(subject_alarms=sub_list, object_alarms=obj_list)
+    sample_list = None
+    # todo add sample_list
+    ip_merged = schema_ip.IPInfoResponse(Alarms=alarm_list, Sample=sample_list, IpInfo=schema_ip.IpBase(**serialize(ip_info)))
+
     if not ip_info:
         return schema_response.MyResponse(
             ErrCode=FAIL,
@@ -54,7 +65,62 @@ def get_file(ip: str, db: Session = Depends(get_db)):
         )
     return schema_response.MyResponse(
         ErrCode=SUCCESS,
-        Data=alarm_list
+        Data=ip_merged
+    )
+
+
+def calculate_page(page_size: int, index_num: int):
+    page_total = math.ceil(index_num / page_size)
+    return page_total
+
+
+@router_ip.get("/pagenum", response_model=schema_response.MyResponse)
+def get_page_num(page_size: int, query=None, db: Session = Depends(get_db)):
+    """
+    :param query: 模糊查询
+    :param page_size: 每页包含ip个数
+    :param db:
+    :return: 总页面数
+    """
+    count = crud_ip.get_ip_num(db, query)
+    page_total = calculate_page(page_size=page_size, index_num=count)
+    page_res = schema_ip.PageResponse(PageNumber=page_total)
+    return schema_response.MyResponse(
+        ErrCode=SUCCESS,
+        Data=page_res
+    )
+
+
+@router_ip.get("/query", response_model=schema_response.MyResponse)
+def query_ip(page_size: int, curr_page: int, query=None, db: Session = Depends(get_db)):
+    """
+    分页查询
+    :param curr_page: 当前页码 最小为1
+    :param db:
+    :param page_size: 每页包含ip个数
+    :param query: 模糊查询
+    :return:
+    """
+    ip_total = crud_ip.get_ip_num(db, query)
+    page_total = calculate_page(page_size, index_num=ip_total)
+    if curr_page <= 0 or curr_page > page_total:
+        return schema_response.MyResponse(
+            ErrCode=FAIL,
+            ErrMessage="页码越界"
+        )
+    ip_info = crud_ip.get_ip_info_by_offset(db, page_size, curr_page, query)
+    ip_list = []
+    for ip in ip_info:
+        thedict = serialize(ip)
+        ip_list.append(schema_ip.IpBase(**thedict))
+    ipres = schema_ip.IpListResponse(
+        PageNumber=page_total,
+        IPList=ip_list,
+        CurrentPage=curr_page
+    )
+    return schema_response.MyResponse(
+        ErrCode=SUCCESS,
+        Data=ipres
     )
 
 

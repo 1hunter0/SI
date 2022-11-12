@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func, distinct
 from app.models import models as model_ip
 from app.schemas import schema_ip
 
@@ -6,6 +7,38 @@ from app.schemas import schema_ip
 def get_inner_ip(db: Session, ip: str):
     try:
         return db.query(model_ip.IpEntity).filter(model_ip.IpEntity.ip == ip).first()
+    except Exception as e:
+        print(e)
+
+
+def get_ip_num(db: Session, query=None):
+    try:
+        if query is None:
+            count = db.query(func.count(distinct(model_ip.IpEntity.ip))).scalar()
+        else:
+            count = db.query(func.count(distinct(model_ip.IpEntity.ip))) \
+                .filter(model_ip.IpEntity.ip.like("%" + query + "%")).scalar()
+        return count
+    except Exception as e:
+        print(e)
+
+
+def get_ip_info_by_offset(db: Session, page_size: int, curpage: int, query=None):
+    offset = (curpage - 1) * page_size
+    try:
+        if query is None:
+            return db.query(model_ip.IpEntity)\
+                .order_by(model_ip.IpEntity.id).\
+                limit(page_size)\
+                .offset(offset)\
+                .all()
+        else:
+            return db.query(model_ip.IpEntity)\
+                .filter(model_ip.IpEntity.ip.like("%" + query + "%"))\
+                .order_by(model_ip.IpEntity.id)\
+                .limit(page_size)\
+                .offset(offset)\
+                .all()
     except Exception as e:
         print(e)
 

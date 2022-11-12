@@ -6,6 +6,7 @@ import { getToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  // baseURL: 'http://localhost:9528',
   // withCredentials: true, // send cookies when cross-domain requests
                             // (不跨域，则默认传递cookie；跨域，则需开启该选项传递cookie)
                             // 由于开发时设置了代理，本质上浏览器没有跨域，因此无论是否开启都会传递cookie(如果有cookie的话)

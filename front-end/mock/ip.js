@@ -2,7 +2,7 @@ const Mock = require('mockjs')
 const { start } = require('nprogress')
 
 const data = Mock.mock({
-  'items|30': [{
+  'items|88': [{
     ip: '@ip',
     country: '中国',
     province: '@province',
@@ -28,9 +28,9 @@ module.exports = [
       page = page*1
       limit = limit * 1
       let startNumber = (page-1)*limit
-      console.log(startNumber)
+      // console.log(startNumber)
       let endNumber = (startNumber + limit > data.items.length) ? data.items.length : startNumber + limit
-      console.log(endNumber)
+      // console.log(endNumber)
       const items = data.items.slice(startNumber,endNumber)
       return {
         ErrCode: 20000,

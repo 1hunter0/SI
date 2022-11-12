@@ -48,6 +48,7 @@ module.exports = {
         }
       }
     },
+    // proxy: 'http://localhost:8000'
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

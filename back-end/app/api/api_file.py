@@ -9,6 +9,7 @@ from app.crud import crud_file
 from app.schemas import schema_file, schema_response
 from app.global_variable import *
 from app.parser.sandbox import SandBox
+from graph.sandbox_neo4j import *
 
 router_file = APIRouter(
     prefix="/files",
@@ -79,6 +80,81 @@ def get_info_from_file(file: UploadFile, db: Session = Depends(get_db)):
     :return:
     """
     return
+
+################
+#将文件网络信息加入图数据库 api  没有检查是否重复 使用的前提是先检查数据库中没有再调用
+# 返回 "detail": "Not Found" 说明该文件没有网络行为
+@router_file.get("/updatenetgraph", response_model=schema_response.MyResponse)
+def update_graph(sha1: str):
+    """
+    :param sha:文件sha256值
+    :return:bool 是否成功
+    """
+    print(sha1)
+    # file_info = crud_file.get_file_info(db, sha1)
+    done = False
+    message = "文件网络信息更新至图数据库成功"
+    graph = Graph('bolt://localhost:7687',auth='neo4j',password='123456')
+    try:
+        done = update_file_network(sha1,graph=graph)
+    except Exception as e:
+        print(e)
+    if not done:
+        return schema_response.MyResponse(ErrCode=FAIL, ErrMessage="数据插入失败")
+    return schema_response.MyResponse(
+        ErrCode=SUCCESS,
+        Data=message
+    )
+    
+################
+#从图数据库返回文件网络信息 api  
+@router_file.get("/getnetgraph", response_model=schema_response.MyResponse)
+def get_graph(name: str):
+    """
+    :param name: 文件名
+    :return: nodes_data,links_data 图数据 分别是结点与连接的两个字典列表
+    """
+    graph = Graph('bolt://localhost:7687',auth='neo4j',password='123456')
+    try:
+        (nodes_data,links_data) = get_gragh(name,graph)
+    except Exception as e:
+        print(e)
+    data1 = {'nodes':nodes_data,'links':links_data}
+    if nodes_data == []:
+        return schema_response.MyResponse(ErrCode=FAIL, ErrMessage="查询不到该文件")
+    return schema_response.MyResponse(
+        ErrCode=SUCCESS,
+        Data=data1
+    )
+################
+#根据ip返回对应文件名 api  
+@router_file.get("/getname", response_model=schema_response.MyResponse)
+def get_graph(ip: str):
+    """
+    :param ip: ipstr
+    :return: filename 图数据中与该ip相关联的文件(进程)列表
+    """
+    graph = Graph('bolt://localhost:7687',auth='neo4j',password='123456')
+    nodes_data= []
+    try:
+        nodes_data= get_gragh_byip(ip,graph)
+    except Exception as e:
+        print(e)
+    if nodes_data == []:
+        return schema_response.MyResponse(ErrCode=FAIL, ErrMessage="无关联文件")
+    return schema_response.MyResponse(
+        ErrCode=SUCCESS,
+        Data=nodes_data
+    )
+
+
+
+
+
+
+
+
+
 #
 # @router_ip.get("/inner/{ip}", response_model=schema_ip.IpInner)
 # def get_inner_ip(ip: str, db: Session = Depends(get_db)):

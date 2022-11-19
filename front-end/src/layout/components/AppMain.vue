@@ -1,7 +1,7 @@
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
-      <keep-alive include="DNS">
+      <keep-alive include="IP">
         <router-view :key="key" />
       </keep-alive>
     </transition>

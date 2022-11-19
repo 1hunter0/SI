@@ -24,12 +24,12 @@ module.exports = [
     type: 'post',
 
     response: config => {
-      let {page, limit, query} = config.query
-      page = page*1
-      limit = limit * 1
-      let startNumber = (page-1)*limit
+      let {curr_page, page_size, query} = config.query
+      curr_page = curr_page*1
+      page_size = page_size * 1
+      let startNumber = (curr_page-1)*page_size
       // console.log(startNumber)
-      let endNumber = (startNumber + limit > data.items.length) ? data.items.length : startNumber + limit
+      let endNumber = (startNumber + page_size > data.items.length) ? data.items.length : startNumber + page_size
       // console.log(endNumber)
       const items = data.items.slice(startNumber,endNumber)
       return {

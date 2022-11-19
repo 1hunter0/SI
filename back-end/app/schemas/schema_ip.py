@@ -60,7 +60,7 @@ class IPInfoResponse(BaseModel):
 
 
 class IpListResponse(BaseModel):
-    PageNumber: int
+    TotalNumber: int
     CurrentPage: int
     IPList: List[IpBase] = []
 

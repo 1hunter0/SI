@@ -103,7 +103,7 @@ def query_ip(page_size: int, curr_page: int, query=None, db: Session = Depends(g
     """
     ip_total = crud_ip.get_ip_num(db, query)
     page_total = calculate_page(page_size, index_num=ip_total)
-    if curr_page <= 0 or curr_page > page_total:
+    if curr_page <= 0 or (curr_page > page_total and curr_page != 1):
         return schema_response.MyResponse(
             ErrCode=FAIL,
             ErrMessage="页码越界"
@@ -114,7 +114,7 @@ def query_ip(page_size: int, curr_page: int, query=None, db: Session = Depends(g
         thedict = serialize(ip)
         ip_list.append(schema_ip.IpBase(**thedict))
     ipres = schema_ip.IpListResponse(
-        PageNumber=page_total,
+        TotalNumber=ip_total,
         IPList=ip_list,
         CurrentPage=curr_page
     )

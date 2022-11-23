@@ -109,14 +109,16 @@ def update_graph(sha1: str):
 ################
 #从图数据库返回文件网络信息 api  
 @router_file.get("/getnetgraph", response_model=schema_response.MyResponse)
-def get_graph(name: str):
+def get_graph(sha: str):
     """
-    :param name: 文件名
+    :param sha: 文件sha值
     :return: nodes_data,links_data 图数据 分别是结点与连接的两个字典列表
     """
     graph = Graph('bolt://localhost:7687',auth='neo4j',password='123456')
+    nodes_data = []
+    links_data = []
     try:
-        (nodes_data,links_data) = get_gragh(name,graph)
+        (nodes_data,links_data) = get_gragh(sha,graph)
     except Exception as e:
         print(e)
     data1 = {'nodes':nodes_data,'links':links_data}
@@ -127,24 +129,26 @@ def get_graph(name: str):
         Data=data1
     )
 ################
-#根据ip返回对应文件名 api  
-@router_file.get("/getname", response_model=schema_response.MyResponse)
+#根据ip返回对应关联样本网络图 api  
+@router_file.get("/getfilebyip", response_model=schema_response.MyResponse)
 def get_graph(ip: str):
     """
     :param ip: ipstr
-    :return: filename 图数据中与该ip相关联的文件(进程)列表
+    :return: nodes_data,links_data 图数据 分别是结点与连接的两个字典列表
     """
     graph = Graph('bolt://localhost:7687',auth='neo4j',password='123456')
-    nodes_data= []
+    nodes_data = []
+    links_data = []
     try:
-        nodes_data= get_gragh_byip(ip,graph)
+        (nodes_data,links_data)= get_gragh_byip(ip,graph)
     except Exception as e:
         print(e)
+    data1 = {'nodes':nodes_data,'links':links_data}
     if nodes_data == []:
-        return schema_response.MyResponse(ErrCode=FAIL, ErrMessage="无关联文件")
+        return schema_response.MyResponse(ErrCode=FAIL, ErrMessage="查询不到相关样本")
     return schema_response.MyResponse(
         ErrCode=SUCCESS,
-        Data=nodes_data
+        Data=data1
     )
 
 

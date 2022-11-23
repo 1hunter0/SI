@@ -11,7 +11,7 @@ class SandBox:
         self.apikey = SANDBOX_APIKEY
         self.param = {
             'apikey': self.apikey,
-            'sha1': sha1
+            'sha256': sha1
         }
 
     def parser(self):
@@ -20,12 +20,10 @@ class SandBox:
         """
         response = requests.get(self.url, params=self.param)
         assert response.status_code==200
-
         data = response.json()['data']
         fields = {"file_name", "file_type", "sha1", "md5", "submit_time", "threat_level", "threat_score",
                   "multi_engines", "sandbox_type_list", "sandbox_behaviors", "multiengines_results"}
         values = {}
-
         # 查看文件基本信息
         # print('文件名称: '+data['summary']['file_name'])
         # print("文件类型: "+data['summary']['file_type'])

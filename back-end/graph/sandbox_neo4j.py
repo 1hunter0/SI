@@ -3,8 +3,12 @@ import requests
 from py2neo import Graph,Node,Relationship
 #neo4j 连接图数据库
 
-#实体：进程 ip 域名 dns
+#实体：文件 进程 ip 域名 dns
 #关系：启动 连接 释放（暂无） [域名]解析[ip]
+def create_file_node(name,sha,graph):
+  file=Node('文件',name=name,sha=sha)
+  graph.create(file)
+  return file
 def create_process_node(name,pid,comline,graph):
   process=Node('进程',name=name,pid=pid,comline=comline)
   graph.create(process)
@@ -85,7 +89,7 @@ def update_file_network(sha,graph):
   }
   response = requests.get(url, params=params)
   data =response.json()
-  # print(data)
+  print(data)
   data_net = data['data']['network']
   data_drop = data['data']['dropped']
   data_ps = data['data']['pstree']
@@ -112,11 +116,12 @@ def update_file_network(sha,graph):
   #print(data_net['tcp'])
   #print(data_net['dns_servers'])
   process_one = create_process_node(res_name[1],res_pid[1],res_comline[1],graph)
+  ff  = create_file_node(res_name[1],sha,graph)
   for i in range(2,process_count):
     #print(res_name[i]+res_pid[i]+res_comline[i])
     j = create_process_node(res_name[i],res_pid[i],res_comline[i],graph)
     create_start_rela(process_one,j,graph)
-    
+  create_start_rela(ff,process_one,graph)
   for i in data_net['domains']:
     j = create_ip_node(i['ip'],graph)
     k = create_domain_node(i['domain'],graph)
@@ -172,10 +177,13 @@ def get_gragh(name1,graph):
 
 if __name__ == '__main__':
   graph = Graph('bolt://localhost:7687',auth='neo4j',password='123456')
-  # clean_data(graph)
-  # sha = 'df6ef08c7f15923c029a8aedf16daf5a5fb56a49942c314bf4e7bc3f3d1139d3'
+  clean_data(graph)
+  sha = 'df6ef08c7f15923c029a8aedf16daf5a5fb56a49942c314bf4e7bc3f3d1139d3'
   # sha = 'bcd9aa6199612ec0ebec498222221e94b47ec23c2eba425791f753eae444b552'
-  sha ='08afebd78cb63025988d19587fd6edbb46460b890c4cc73e7e9ce82fbfa4f03f'
+  # sha ='08afebd78cb63025988d19587fd6edbb46460b890c4cc73e7e9ce82fbfa4f03f'
+  # sha = '273b04eb37269be2b9ca465e4da755a8fdfbff65049bd21879234fc4e66e4953'
+  # sha = '515987734680f578fdd05e47f599091e9bcf9648f38eadb22abf75b9c5726a5d'
+  # sha = '9616ae6194d02e44f1cc5b55fc63ce6ab7af2d1cb92941b9bc754cd5adefc6da'
   update_file_network(sha,graph)
   # nodes_data,links_data = get_gragh('hh3.0.exe',graph)
   # for node in nodes_data:

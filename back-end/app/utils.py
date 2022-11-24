@@ -62,6 +62,24 @@ def serialize(model):
     return dict((c, getattr(model, c)) for c in columns)
 
 
+from app.global_variable import THREAT_LEVEL
+
+
+def threat_comparison(threat1: str, threat2: str):
+    """
+    # compare threat level by THREAT_LEVEL in global_variable
+    :param threat1:
+    :param threat2:
+    :return: threat1 level >  threat2 level
+    """
+    if threat1 is None:
+        return False
+    if threat2 is None:
+        return True
+    return THREAT_LEVEL[threat1] > THREAT_LEVEL[threat2]
+
+
 if __name__ == '__main__':  # 测试
     print(get_password_hash("123456"))
     print(verify_password("123456", "$2b$12$DYN8BofHRXwFdVkG.QQH1uG5PnHeEVFhTT.Nq1.HU3LKQtBEC4KWG"))
+    print(threat_comparison('high','low'))

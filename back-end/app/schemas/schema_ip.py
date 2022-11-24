@@ -14,6 +14,9 @@ class IpBase(BaseModel):
     isp: Union[str, None] = None
     latitude: Union[decimal.Decimal, None] = None
     longitude: Union[decimal.Decimal, None] = None
+    degree: Union[str, None] = None
+    confidence: Union[str, None] = None
+    source: Union[str, None] = None
 
 
 class AlarmBase(BaseModel):

@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, distinct
 from app.models import models as model_ip
 from app.schemas import schema_ip
+from app.utils import threat_comparison
 
 
 def get_inner_ip(db: Session, ip: str):
@@ -27,17 +28,17 @@ def get_ip_info_by_offset(db: Session, page_size: int, curpage: int, query=None)
     offset = (curpage - 1) * page_size
     try:
         if query is None:
-            return db.query(model_ip.IpEntity)\
-                .order_by(model_ip.IpEntity.id).\
-                limit(page_size)\
-                .offset(offset)\
+            return db.query(model_ip.IpEntity) \
+                .order_by(model_ip.IpEntity.id). \
+                limit(page_size) \
+                .offset(offset) \
                 .all()
         else:
-            return db.query(model_ip.IpEntity)\
-                .filter(model_ip.IpEntity.ip.like("%" + query + "%"))\
-                .order_by(model_ip.IpEntity.id)\
-                .limit(page_size)\
-                .offset(offset)\
+            return db.query(model_ip.IpEntity) \
+                .filter(model_ip.IpEntity.ip.like("%" + query + "%")) \
+                .order_by(model_ip.IpEntity.id) \
+                .limit(page_size) \
+                .offset(offset) \
                 .all()
     except Exception as e:
         print(e)
@@ -71,9 +72,21 @@ def create_ip(db: Session, ip: schema_ip.IpBase):
     if crrip:
         if crrip.country is None:
             try:
+                # set highest alarm degree as ip degree
+                if threat_comparison(crrip.degree, ip.degree):
+                    ip.degree = crrip.degree
                 db_ip = db.query(model_ip.IpEntity).filter(model_ip.IpEntity.ip == ip).update(ip.dict())
                 db.commit()
                 db.refresh(db_ip)
+            except Exception as e:
+                print(e)
+        else:
+            try:
+                if threat_comparison(ip.degree, crrip.degree):
+                    # ip higher than crrip
+                    db_ip = db.query(model_ip.IpEntity).filter(model_ip.IpEntity.ip == ip).update({"degree": ip.degree})
+                    db.commit()
+                    db.refresh(db_ip)
             except Exception as e:
                 print(e)
         return db_ip

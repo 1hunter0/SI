@@ -25,6 +25,9 @@ class IpEntity(Base):
     isp = Column(VARCHAR(255))
     latitude = Column(DECIMAL(10, 6))
     longitude = Column(DECIMAL(10, 6))
+    degree = Column(VARCHAR(255))
+    confidence = Column(VARCHAR(255))
+    source = Column(VARCHAR(255))
 
 
 class SandboxFileEntity(Base):

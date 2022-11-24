@@ -7,7 +7,9 @@ from app.schemas import schema_ip, schema_dns, schema_url
 
 
 class InnerParser:
-    def __init__(self, alarm):
+    def __init__(self, alarm, confidence='high', source='rizhiyi'):
+        self.source = source
+        self.confidence = confidence
         self.alarm = alarm
         self.ip = []
         self.ip_alarm = schema_ip.Alarm()
@@ -19,12 +21,17 @@ class InnerParser:
         if self.alarm.get("src_ip"):
             ip_ = schema_ip.IpBase()
             for k in common.IPFIELD.keys():
-                setattr(ip_, k, self.alarm.get(common.IPFIELD[k]))
+                value = self.alarm.get(common.IPFIELD[k])
+                setattr(ip_, k, value)
+            setattr(ip_, 'source', self.source)
+            setattr(ip_, "confidence", self.confidence)
             self.ip.append(ip_)
 
         dstdata = self.alarm.get("dst_ip")
         if dstdata is not None:
             dst_ip = schema_ip.IpBase(ip=self.alarm.get("dst_ip"))
+            setattr(dst_ip, 'source', self.source)
+            setattr(dst_ip, "confidence", self.confidence)
             self.ip.append(dst_ip)
 
     def alarm_parser(self):
@@ -58,8 +65,10 @@ class InnerParser:
 if __name__ == '__main__':
     f = open("/Users/corazon/Code/PycharmProjects/SI/back-end/parser/data.json", encoding="utf-8")
     a = {}
+    m = set()
     for line in f:
         data = json.loads(line)
         b = InnerParser(data)
-        if b.ip_alarm is not None:
-            print(b.ip_alarm.dict())
+        from app.utils import serialize
+        for ip in b.ip:
+            print(ip)

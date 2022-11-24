@@ -8,7 +8,8 @@ IPFIELD = {"ip": "src_ip",
            "province": "src.province",
            "city": "src.city",
            "isp": "src.isp",
-           "country": "src.country"}
+           "country": "src.country",
+           "degree": "degree"}
 
 IPALARMFIELD = {"ip_subject": "src_ip",
                 "ip_object": "dst_ip",

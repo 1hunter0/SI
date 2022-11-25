@@ -54,48 +54,41 @@ def get_ip_relevant_alarm(db: Session, ip: str):
 
 
 def create_alarm(db: Session, alarm: schema_ip.Alarm):
-    db_alarm = model_ip.IpAlarmEvent()
-    for k, v in alarm.dict().items():
-        setattr(db_alarm, k, v)
     try:
-        db.add(db_alarm)
+        db_alarm = db.query(model_ip.IpAlarmEvent).filter(model_ip.IpAlarmEvent.ip_object == alarm.ip_object,
+                                                          model_ip.IpAlarmEvent.ip_subject == alarm.ip_subject,
+                                                          model_ip.IpAlarmEvent.attack_type == alarm.attack_type) \
+            .first()
+        if db_alarm is None:
+            db_alarm = model_ip.IpAlarmEvent()
+            for k, v in alarm.dict().items():
+                setattr(db_alarm, k, v)
+        db_alarm.count += 1
+        db.merge(db_alarm)
         db.commit()
-        db.refresh(db_alarm)
+        # db.refresh(db_alarm)
+        return db_alarm
     except Exception as e:
         print(e)
-    return db_alarm
 
 
 def create_ip(db: Session, ip: schema_ip.IpBase):
     db_ip = model_ip.IpEntity()
+    for k, v in ip.dict().items():
+        setattr(db_ip, k, v)
     crrip = get_inner_ip(db, ip.ip)
     if crrip:
         if crrip.country is None:
-            try:
-                # set highest alarm degree as ip degree
-                if threat_comparison(crrip.degree, ip.degree):
-                    ip.degree = crrip.degree
-                db_ip = db.query(model_ip.IpEntity).filter(model_ip.IpEntity.ip == ip).update(ip.dict())
-                db.commit()
-                db.refresh(db_ip)
-            except Exception as e:
-                print(e)
+            # set highest alarm degree as ip degree
+            if threat_comparison(crrip.degree, db_ip.degree):
+                db_ip.degree = crrip.degree
         else:
-            try:
-                if threat_comparison(ip.degree, crrip.degree):
-                    # ip higher than crrip
-                    db_ip = db.query(model_ip.IpEntity).filter(model_ip.IpEntity.ip == ip).update({"degree": ip.degree})
-                    db.commit()
-                    db.refresh(db_ip)
-            except Exception as e:
-                print(e)
-        return db_ip
-    for k, v in ip.dict().items():
-        setattr(db_ip, k, v)
+            if threat_comparison(db_ip.degree, crrip.degree):
+                crrip.degree = db_ip.degree
+            db_ip = crrip
     try:
-        db.add(db_ip)
+        db.merge(db_ip)
         db.commit()
-        db.refresh(db_ip)
     except Exception as e:
         print(e)
     return db_ip

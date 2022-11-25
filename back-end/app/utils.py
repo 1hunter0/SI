@@ -82,4 +82,4 @@ def threat_comparison(threat1: str, threat2: str):
 if __name__ == '__main__':  # 测试
     print(get_password_hash("123456"))
     print(verify_password("123456", "$2b$12$DYN8BofHRXwFdVkG.QQH1uG5PnHeEVFhTT.Nq1.HU3LKQtBEC4KWG"))
-    print(threat_comparison('high','low'))
+    print(threat_comparison('high',None))

@@ -1,5 +1,5 @@
 # coding: utf-8
-from sqlalchemy import Column, DECIMAL, ForeignKey, Integer, String, TIMESTAMP
+from sqlalchemy import Column, DECIMAL, ForeignKey, Integer, String, TIMESTAMP, UniqueConstraint
 from sqlalchemy.dialects.mysql import TINYINT, VARCHAR
 from sqlalchemy.orm import relationship
 from app.database import Base
@@ -17,8 +17,8 @@ class User(Base):
 
 class IpEntity(Base):
     __tablename__ = 'ip_entity'
-    id = Column(Integer, primary_key=True)
-    ip = Column(VARCHAR(255), unique=True)
+    id = Column(Integer, autoincrement=True)
+    ip = Column(VARCHAR(255), primary_key=True)
     country = Column(VARCHAR(255))
     province = Column(VARCHAR(255))
     city = Column(VARCHAR(255))
@@ -58,7 +58,7 @@ class DnsEntity(Base):
     __tablename__ = 'dns_entity'
     id = Column(Integer, primary_key=True)
     dns = Column(String(255))
-    analysis_ip = Column(ForeignKey('ip_entity.id', ondelete='SET NULL', onupdate='RESTRICT'), index=True,
+    analysis_ip = Column(ForeignKey('ip_entity.ip', ondelete='SET NULL', onupdate='RESTRICT'), index=True,
                          comment='解析ip')
     related_url = Column(ForeignKey('url_entity.id', ondelete='SET NULL', onupdate='RESTRICT'), index=True,
                          comment='相关url')
@@ -80,6 +80,7 @@ class IpAlarmEvent(Base):
                         index=True, comment='攻击者ip')
     ip_object = Column(ForeignKey('ip_entity.ip', ondelete='RESTRICT', onupdate='RESTRICT'), nullable=False, index=True,
                        comment='受害者ip')
+    attack_type = Column(VARCHAR(255), comment='攻击类型及编号')
     dev_info = Column(VARCHAR(255), nullable=False, comment='告警来源设备')
     hostname = Column(VARCHAR(255), nullable=False, comment='告警来源ip')
     timestamp = Column(TIMESTAMP, nullable=False, comment='告警发生时间')
@@ -93,10 +94,14 @@ class IpAlarmEvent(Base):
     threat_phase = Column(VARCHAR(255), comment='威胁的阶段')
     kill_chain = Column(VARCHAR(255), comment='单个杀伤链')
     kill_chain_all = Column(VARCHAR(255), comment='全杀伤链')
-    attack_type = Column(VARCHAR(255), comment='攻击类型及编号')
-    attack_type_all = Column(VARCHAR(255), comment='攻击类型及编号')
-    att_ck_all = Column(VARCHAR(255), comment='攻击类型及编号')
-    att_ck = Column(VARCHAR(255), comment='攻击类型及编号')
 
+    # attack_type_all = Column(VARCHAR(255), comment='攻击类型及编号')
+    # att_ck_all = Column(VARCHAR(255), comment='攻击类型及编号')
+    # att_ck = Column(VARCHAR(255), comment='攻击类型及编号')
+    count = Column(Integer)
     ip_entity = relationship('IpEntity', primaryjoin='IpAlarmEvent.ip_object == IpEntity.ip')
     ip_entity1 = relationship('IpEntity', primaryjoin='IpAlarmEvent.ip_subject == IpEntity.ip')
+
+    __table_args__ = (
+        UniqueConstraint("ip_subject", "ip_object", "attack_type", name='unique_ipsub_ipobj_attacktype'),
+    )

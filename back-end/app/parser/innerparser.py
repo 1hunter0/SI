@@ -30,6 +30,7 @@ class InnerParser:
         dstdata = self.alarm.get("dst_ip")
         if dstdata is not None:
             dst_ip = schema_ip.IpBase(ip=self.alarm.get("dst_ip"))
+            setattr(dst_ip, 'degree', self.alarm.get('degree'))
             setattr(dst_ip, 'source', self.source)
             setattr(dst_ip, "confidence", self.confidence)
             self.ip.append(dst_ip)
@@ -41,13 +42,13 @@ class InnerParser:
                 return
 
         for k in common.IPALARMFIELD.keys():
-            value = self.alarm.get(common.IPALARMFIELD[k])
+            value = self.alarm.get(k)
             if k == "timestamp":
                 value = datetime.datetime.fromtimestamp(int(value) / 1000)
             value = str(value)
             if len(value) > 250:
                 value = value[:250]
-            setattr(self.ip_alarm, k, str(value))
+            setattr(self.ip_alarm, common.IPALARMFIELD[k], str(value))
 
     def dns_parser(self):
         pass
@@ -70,5 +71,6 @@ if __name__ == '__main__':
         data = json.loads(line)
         b = InnerParser(data)
         from app.utils import serialize
+
         for ip in b.ip:
             print(ip)

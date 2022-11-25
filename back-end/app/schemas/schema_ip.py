@@ -40,9 +40,10 @@ class Alarm(AlarmBase):
     kill_chain: Union[str, None] = None
     kill_chain_all: Union[str, None] = None
     attack_type: Union[str, None] = None
-    attack_type_all: Union[str, None] = None
-    att_ck_all: Union[str, None] = None
-    att_ck: Union[str, None] = None
+    #attack_type_all: Union[str, None] = None
+    #att_ck_all: Union[str, None] = None
+    #att_ck: Union[str, None] = None
+    count: int = 0
 
     class Config:
         orm_mode = True

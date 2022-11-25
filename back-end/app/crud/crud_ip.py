@@ -29,8 +29,8 @@ def get_ip_info_by_offset(db: Session, page_size: int, curpage: int, query=None)
     try:
         if query is None:
             return db.query(model_ip.IpEntity) \
-                .order_by(model_ip.IpEntity.id). \
-                limit(page_size) \
+                .order_by(model_ip.IpEntity.id) \
+                .limit(page_size) \
                 .offset(offset) \
                 .all()
         else:
@@ -74,21 +74,35 @@ def create_alarm(db: Session, alarm: schema_ip.Alarm):
 
 def create_ip(db: Session, ip: schema_ip.IpBase):
     db_ip = model_ip.IpEntity()
-    for k, v in ip.dict().items():
-        setattr(db_ip, k, v)
     crrip = get_inner_ip(db, ip.ip)
     if crrip:
         if crrip.country is None:
-            # set highest alarm degree as ip degree
-            if threat_comparison(crrip.degree, db_ip.degree):
-                db_ip.degree = crrip.degree
+            try:
+                # set highest alarm degree as ip degree
+                if threat_comparison(crrip.degree, ip.degree):
+                    ip.degree = crrip.degree
+                db_ip = db.query(model_ip.IpEntity).filter(model_ip.IpEntity.ip == ip.ip).update(ip.dict())
+                db.commit()
+                db.refresh(db_ip)
+            except Exception as e:
+                print(e)
         else:
-            if threat_comparison(db_ip.degree, crrip.degree):
-                crrip.degree = db_ip.degree
-            db_ip = crrip
+            try:
+                if threat_comparison(ip.degree, crrip.degree):
+                    # ip higher than crrip
+                    db_ip = db.query(model_ip.IpEntity).filter(model_ip.IpEntity.ip == ip.ip).update({"degree": ip.degree})
+                    db.commit()
+                    db.refresh(db_ip)
+            except Exception as e:
+                print(e)
+        return db_ip
+    for k, v in ip.dict().items():
+        setattr(db_ip, k, v)
     try:
-        db.merge(db_ip)
+        db.add(db_ip)
         db.commit()
+        db.refresh(db_ip)
     except Exception as e:
         print(e)
     return db_ip
+

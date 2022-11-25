@@ -17,8 +17,8 @@ class User(Base):
 
 class IpEntity(Base):
     __tablename__ = 'ip_entity'
-    id = Column(Integer, autoincrement=True)
-    ip = Column(VARCHAR(255), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    ip = Column(VARCHAR(255), unique=True)
     country = Column(VARCHAR(255))
     province = Column(VARCHAR(255))
     city = Column(VARCHAR(255))
@@ -58,7 +58,7 @@ class DnsEntity(Base):
     __tablename__ = 'dns_entity'
     id = Column(Integer, primary_key=True)
     dns = Column(String(255))
-    analysis_ip = Column(ForeignKey('ip_entity.ip', ondelete='SET NULL', onupdate='RESTRICT'), index=True,
+    analysis_ip = Column(ForeignKey('ip_entity.id', ondelete='SET NULL', onupdate='RESTRICT'), index=True,
                          comment='解析ip')
     related_url = Column(ForeignKey('url_entity.id', ondelete='SET NULL', onupdate='RESTRICT'), index=True,
                          comment='相关url')

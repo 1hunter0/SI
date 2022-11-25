@@ -28,6 +28,14 @@ class AlarmBase(BaseModel):
     timestamp: datetime.datetime = None
 
 
+class RiskAlarm(BaseModel):
+    event_id: Union[int, None] = None
+    ip_subject: Union[str, None] = None
+    ip_object: Union[str, None] = None
+    attack_type: Union[str, None] = None
+    reason: Union[str, None] = None
+
+
 class Alarm(AlarmBase):
     attack_stage: Union[str, None] = None
     attack_status: Union[str, None] = None
@@ -40,9 +48,6 @@ class Alarm(AlarmBase):
     kill_chain: Union[str, None] = None
     kill_chain_all: Union[str, None] = None
     attack_type: Union[str, None] = None
-    #attack_type_all: Union[str, None] = None
-    #att_ck_all: Union[str, None] = None
-    #att_ck: Union[str, None] = None
     count: int = 0
 
     class Config:
@@ -67,6 +72,12 @@ class IpListResponse(BaseModel):
     TotalNumber: int
     CurrentPage: int
     IPList: List[IpBase] = []
+
+
+class RiskAlarmListResponse(BaseModel):
+    TotalNumber: int
+    CurrentPage: int
+    RiskAlarmList: List[RiskAlarm] = []
 
 
 class PageResponse(BaseModel):

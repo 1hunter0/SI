@@ -61,8 +61,8 @@ def get_file(ip: str, db: Session = Depends(get_db)):
     alarm_list = schema_ip.IpInner(subject_alarms=sub_list, object_alarms=obj_list)
     sample_list = None
     # todo add sample_list
-    ip_merged = schema_ip.IPInfoResponse(Alarms=alarm_list, Sample=sample_list, IpInfo=schema_ip.IpBase(**serialize(ip_info)))
-
+    ip_merged = schema_ip.IPInfoResponse(Alarms=alarm_list, Sample=sample_list,
+                                         IpInfo=schema_ip.IpBase(**serialize(ip_info)))
 
     return schema_response.MyResponse(
         ErrCode=SUCCESS,
@@ -122,6 +122,39 @@ def query_ip(page_size: int, curr_page: int, query=None, db: Session = Depends(g
     return schema_response.MyResponse(
         ErrCode=SUCCESS,
         Data=ipres
+    )
+
+
+@router_ip.get("/query_risk_alarm", response_model=schema_response.MyResponse)
+def query_risk_alarm(page_size: int, curr_page: int, query=None, db: Session = Depends(get_db)):
+    """
+    分页查询
+    :param curr_page: 当前页码 最小为1
+    :param db:
+    :param page_size: 每页包含alarm
+    :param query: 模糊查询
+    :return:
+    """
+    alarm_total = crud_ip.get_risk_alarm_num(db, query)
+    page_total = calculate_page(page_size, index_num=alarm_total)
+    if curr_page <= 0 or (curr_page > page_total and curr_page != 1):
+        return schema_response.MyResponse(
+            ErrCode=FAIL,
+            ErrMessage="页码越界"
+        )
+    risk_alarm_info = crud_ip.get_riskalarm_by_offset(db, page_size, curr_page, query)
+    risk_alarm_list = []
+    for risk_alarm in risk_alarm_info:
+        thedict = serialize(risk_alarm)
+        risk_alarm_list.append(schema_ip.RiskAlarm(**thedict))
+    riskalarmres = schema_ip.RiskAlarmListResponse(
+        TotalNumber=alarm_total,
+        RiskAlarmList=risk_alarm_list,
+        CurrentPage=curr_page
+    )
+    return schema_response.MyResponse(
+        ErrCode=SUCCESS,
+        Data=riskalarmres
     )
 
 

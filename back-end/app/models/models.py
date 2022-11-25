@@ -95,13 +95,29 @@ class IpAlarmEvent(Base):
     kill_chain = Column(VARCHAR(255), comment='单个杀伤链')
     kill_chain_all = Column(VARCHAR(255), comment='全杀伤链')
 
-    # attack_type_all = Column(VARCHAR(255), comment='攻击类型及编号')
-    # att_ck_all = Column(VARCHAR(255), comment='攻击类型及编号')
-    # att_ck = Column(VARCHAR(255), comment='攻击类型及编号')
     count = Column(Integer)
     ip_entity = relationship('IpEntity', primaryjoin='IpAlarmEvent.ip_object == IpEntity.ip')
     ip_entity1 = relationship('IpEntity', primaryjoin='IpAlarmEvent.ip_subject == IpEntity.ip')
 
     __table_args__ = (
         UniqueConstraint("ip_subject", "ip_object", "attack_type", name='unique_ipsub_ipobj_attacktype'),
+    )
+
+
+class RiskIpAlarmEvent(Base):
+    __tablename__ = 'risk_ip_alarm_event'
+
+    event_id = Column(Integer, primary_key=True)
+    ip_subject = Column(ForeignKey('ip_entity.ip', ondelete='RESTRICT', onupdate='RESTRICT'), nullable=False,
+                        index=True, comment='攻击者ip')
+    ip_object = Column(ForeignKey('ip_entity.ip', ondelete='RESTRICT', onupdate='RESTRICT'), nullable=False, index=True,
+                       comment='受害者ip')
+    attack_type = Column(VARCHAR(255), comment='攻击类型及编号')
+    reason = Column(VARCHAR(255), comment='高风险原因')
+
+    ip_entity = relationship('IpEntity', primaryjoin='RiskIpAlarmEvent.ip_object == IpEntity.ip')
+    ip_entity1 = relationship('IpEntity', primaryjoin='RiskIpAlarmEvent.ip_subject == IpEntity.ip')
+
+    __table_args__ = (
+        UniqueConstraint("ip_subject", "ip_object", "attack_type", name='risk_unique_ipsub_ipobj_attacktype'),
     )

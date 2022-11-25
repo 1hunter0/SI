@@ -7,7 +7,8 @@ from app.utils import threat_comparison
 
 def get_inner_ip(db: Session, ip: str):
     try:
-        return db.query(model_ip.IpEntity).filter(model_ip.IpEntity.ip == ip).first()
+        return db.query(model_ip.IpEntity).filter(model_ip.IpEntity.ip == ip,
+                                                  model_ip.IpEntity.country.isnot(None)).first()
     except Exception as e:
         print(e)
 
@@ -29,12 +30,14 @@ def get_ip_info_by_offset(db: Session, page_size: int, curpage: int, query=None)
     try:
         if query is None:
             return db.query(model_ip.IpEntity) \
+                .filter(model_ip.IpEntity.country.isnot(None)) \
                 .order_by(model_ip.IpEntity.id) \
                 .limit(page_size) \
                 .offset(offset) \
                 .all()
         else:
             return db.query(model_ip.IpEntity) \
+                .filter(model_ip.IpEntity.country.isnot(None)) \
                 .filter(model_ip.IpEntity.ip.like("%" + query + "%")) \
                 .order_by(model_ip.IpEntity.id) \
                 .limit(page_size) \
@@ -90,7 +93,8 @@ def create_ip(db: Session, ip: schema_ip.IpBase):
             try:
                 if threat_comparison(ip.degree, crrip.degree):
                     # ip higher than crrip
-                    db_ip = db.query(model_ip.IpEntity).filter(model_ip.IpEntity.ip == ip.ip).update({"degree": ip.degree})
+                    db_ip = db.query(model_ip.IpEntity).filter(model_ip.IpEntity.ip == ip.ip).update(
+                        {"degree": ip.degree})
                     db.commit()
                     db.refresh(db_ip)
             except Exception as e:
@@ -105,4 +109,3 @@ def create_ip(db: Session, ip: schema_ip.IpBase):
     except Exception as e:
         print(e)
     return db_ip
-

@@ -50,6 +50,11 @@ def get_file(ip: str, db: Session = Depends(get_db)):
     """
     print(ip)
     ip_info = crud_ip.get_inner_ip(db, ip)
+    if not ip_info:
+        return schema_response.MyResponse(
+            ErrCode=FAIL,
+            ErrMessage="数据库中未找到相关IP"
+        )
     ipalarm_sub, ipalarm_obj = crud_ip.get_ip_relevant_alarm(db, ip)
     sub_list = model2alarmlist(ipalarm_sub)
     obj_list = model2alarmlist(ipalarm_obj)
@@ -58,11 +63,7 @@ def get_file(ip: str, db: Session = Depends(get_db)):
     # todo add sample_list
     ip_merged = schema_ip.IPInfoResponse(Alarms=alarm_list, Sample=sample_list, IpInfo=schema_ip.IpBase(**serialize(ip_info)))
 
-    if not ip_info:
-        return schema_response.MyResponse(
-            ErrCode=FAIL,
-            ErrMessage="数据库中未找到相关IP"
-        )
+
     return schema_response.MyResponse(
         ErrCode=SUCCESS,
         Data=ip_merged

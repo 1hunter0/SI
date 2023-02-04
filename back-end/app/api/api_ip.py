@@ -190,6 +190,28 @@ def create_alarms_by_file(file: UploadFile, db: Session = Depends(get_db)):
         ErrCode=SUCCESS,
         Data=message
     )
+
+
+@router_ip.get("/topk_attack_type", response_model=schema_response.MyResponse)
+def get_topk_attck_type(ip: str, k: int, db: Session = Depends(get_db)):
+    print(ip, k)
+    attackTypeInfo = crud_ip.get_topk_attack_type(db, ip, k)
+    attackTypeList = []
+    for mtype in attackTypeInfo:
+        attackTypeList.append(mtype[0])
+
+    # todo add virusFamilylist
+    virusFamilyList = []
+    attackGangsList = []
+    return schema_response.MyResponse(
+        ErrCode=SUCCESS,
+        Data=schema_ip.TopkAttckTypeResponse(
+            AttackTypeList=attackTypeList,
+            VirusFamilyList=virusFamilyList,
+            AttackGangsList=attackGangsList
+        )
+    )
+
 #     add_dict = {
 #         'ip_list': [],
 #         'alarm_list': []

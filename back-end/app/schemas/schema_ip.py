@@ -82,3 +82,11 @@ class RiskAlarmListResponse(BaseModel):
 
 class PageResponse(BaseModel):
     PageNumber: int
+
+
+
+
+class TopkAttckTypeResponse(BaseModel):
+    AttackTypeList: List[str]
+    VirusFamilyList: List[str]
+    AttackGangsList: List[str]

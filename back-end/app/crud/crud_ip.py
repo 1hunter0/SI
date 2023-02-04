@@ -103,6 +103,22 @@ def get_ip_relevant_risk_alarm(db: Session, ip: str):
         print(e)
 
 
+def get_topk_attack_type(db: Session, ip: str, k: int):
+    try:
+        attack_type_list = db.query(model_ip.IpAlarmEvent.attack_type,
+                                    func.count(model_ip.IpAlarmEvent.attack_type)) \
+            .filter(model_ip.IpAlarmEvent.ip_subject == ip) \
+            .group_by(model_ip.IpAlarmEvent.attack_type) \
+            .order_by(func.count(model_ip.IpAlarmEvent.attack_type).desc()) \
+            .all()
+        #print(attack_type_list[0][0])
+        if attack_type_list[0][0] == 'None':
+            return attack_type_list[1:k+1]
+        return attack_type_list[:k]
+    except Exception as e:
+        print(e)
+
+
 def create_alarm(db: Session, alarm: schema_ip.Alarm):
     try:
         db_alarm = db.query(model_ip.IpAlarmEvent).filter(model_ip.IpAlarmEvent.ip_object == alarm.ip_object,

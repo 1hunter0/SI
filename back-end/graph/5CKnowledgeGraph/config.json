@@ -1,0 +1,12 @@
+{
+  "CVE_Entity_File_Path" : "../5CDataSet/Node/CVE_Entity.csv",
+  "CPE_Entity_No_Quote_File_Path" : "../5CDataSet/Node/CPE_Entity_No_Quote.csv",
+  "CPE_Entity_With_Quote_File_Path" : "../5CDataSet/Node/CPE_Entity_With_Quote.csv",
+  "CWE_Entity_File_Path" : "../5CDataSet/Node/CWE_Entity.csv",
+  "CAPEC_Entity_File_Path" : "../5CDataSet/Node/CAPEC_Entity.csv",
+
+  "CVE_CPE_Relation_File_Path_No_Quote" : "../5CDataSet/Edge/CVE_contact_CPE_No_Quote.csv",
+  "CVE_CPE_Relation_File_Path_With_Quote" : "../5CDataSet/Edge/CVE_contact_CPE_With_Quote.csv",
+  "CVE_CWE_Relation_File_Path" : "../5CDataSet/Edge/CVE_contact_CWE.csv",
+  "CWE_CAPEC_Relation_File_Path" : "../5CDataSet/Edge/CWE_contact_CAPEC.csv"
+}

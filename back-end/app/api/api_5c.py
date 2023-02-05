@@ -20,7 +20,7 @@ router_5c = APIRouter(
 @router_5c.get("/get5cgraph", response_model=schema_response.MyResponse)
 def get_graph(node_name: str):
     """
-    :param node_name: 节点的名字，通过主码确定，例如"CVE-2006-0207"、”CWE-94“、”CAPEC-111“等
+    :param node_name: 节点的名字，通过主码确定，例如"CVE-2006-0207"、"CWE-94"、"CAPEC-111"等
     :return: nodes_data,links_data 图数据 分别是结点与连接的两个字典列表
     """
     graph = Graph('bolt://localhost:7687', auth='neo4j', password='123456')

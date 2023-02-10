@@ -12,13 +12,17 @@ class EdgeBase:
     relation: str = None
 
 
+
 class CveCpeEdge(EdgeBase):
     def __init__(self, configReader):
         self.CveCpeNoQuoteFilePath = configReader["CVE_CPE_Relation_File_Path_No_Quote"]
         self.CveCpeWithQuoteFilePath = configReader["CVE_CPE_Relation_File_Path_With_Quote"]
+        # 连接neo4j 数据库
+        self.graph = Graph('http://localhost:7474',
+                           auth=(configReader['neo4j_user_name'], configReader['neo4j_password']))
 
     def loadData(self):
-        self.createCveCpeEdge(self.CveCpeNoQuoteFilePath, self.CveCpeWithQuoteFilePath)
+        self.createCveCpeEdgeFromDataSet(self.CveCpeNoQuoteFilePath, self.CveCpeWithQuoteFilePath)
 
     def createCveCpeEdgeFromDataSet(self, CVE_contact_CPE_No_Quote: str, CVE_contact_CPE_With_Quote: str):
         print('\n', '------------------------start create edge between CVE and CPE------------------------')
@@ -26,13 +30,13 @@ class CveCpeEdge(EdgeBase):
 
         create_CVE_CPE_Relation_cypher = '''USING PERIODIC COMMIT 5000
         LOAD CSV WITH HEADERS  
-        FROM "file:///Origin/Relation/CVE_contact_CPE_No_Quote.csv" AS line
+        FROM "file:///5CDataSet/Edge/CVE_contact_CPE_No_Quote.csv" AS line
         match (from:CVE{CVE_ID:line.CVE_ID})
         match (to:CPE{cpe23Uri:line.cpe23Uri})
         MERGE (from)-[r:affectProducts]->(to)
         MERGE (to)-[r1:hasRelatedVulnerability]->(from)'''
-        create_CVE_CPE_Relation_cypher.replace("file:///Origin/Relation/CVE_contact_CPE_No_Quote.csv",
-                                               CVE_contact_CPE_No_Quote)
+        # create_CVE_CPE_Relation_cypher.replace("file:///5CDataSet/Edge/CVE_contact_CPE_No_Quote.csv",
+        #                                        CVE_contact_CPE_No_Quote)
 
         print(create_CVE_CPE_Relation_cypher)
 
@@ -63,9 +67,12 @@ class CveCpeEdge(EdgeBase):
 class CveCweEdge(EdgeBase):
     def __init__(self, configReader):
         self.CveCweFilePath = configReader["CVE_CWE_Relation_File_Path"]
+        # 连接neo4j 数据库
+        self.graph = Graph('http://localhost:7474',
+                           auth=(configReader['neo4j_user_name'], configReader['neo4j_password']))
 
     def loadData(self):
-        self.createCveCweEdge(self.CveCweFilePath)
+        self.createCveCweEdgeFromDataSet(self.CveCweFilePath)
 
     def createCveCweEdgeFromDataSet(self, CVE_contact_CWE: str):
         print('\n', '------------------------start create edge between CVE and CWE------------------------')
@@ -73,12 +80,12 @@ class CveCweEdge(EdgeBase):
 
         create_CVE_CWE_Relation_cypher = '''USING PERIODIC COMMIT 5000
         LOAD CSV WITH HEADERS  
-        FROM "file:///Origin/Relation/CVE_contact_CWE.csv" AS line 
+        FROM "file:///5CDataSet/Edge/CVE_contact_CWE.csv" AS line 
         match (from:CVE{CVE_ID:line.CVE_ID})
         match (to:CWE{CWE_ID:line.CWE_ID})
         MERGE (from)-[r:hasRelatedWeaknesses]->(to)
         MERGE (to)-[r1:hasRelatedVulnerability]->(from)'''
-        create_CVE_CWE_Relation_cypher.replace("file:///Origin/Relation/CVE_contact_CWE.csv",CVE_contact_CWE)
+        # create_CVE_CWE_Relation_cypher.replace("file:///5CDataSet/Edge/CVE_contact_CWE.csv",CVE_contact_CWE)
 
         print(create_CVE_CWE_Relation_cypher)
 
@@ -91,9 +98,12 @@ class CveCweEdge(EdgeBase):
 class CweCapecEdge(EdgeBase):
     def __init__(self, configReader):
         self.CveCapecFilePath = configReader["CWE_CAPEC_Relation_File_Path"]
+        # 连接neo4j 数据库
+        self.graph = Graph('http://localhost:7474',
+                           auth=(configReader['neo4j_user_name'], configReader['neo4j_password']))
 
     def loadData(self):
-        self.createCweCapecEdge(self.CveCapecFilePath)
+        self.createCweCapecEdgeFromDataSet(self.CveCapecFilePath)
 
     def createCweCapecEdgeFromDataSet(self, CWE_contact_CAPEC: str):
         print('\n', '------------------------start create edge between CWE and CAPEC------------------------')
@@ -101,12 +111,12 @@ class CweCapecEdge(EdgeBase):
 
         create_CWE_CAPEC_Relation_cypher = '''USING PERIODIC COMMIT 5000
         LOAD CSV WITH HEADERS  
-        FROM "file:///Origin/Relation/CWE_contact_CAPEC.csv" AS line 
+        FROM "file:///5CDataSet/Edge/CWE_contact_CAPEC.csv" AS line 
         match (from:CVE{CVE_ID:line.CVE_ID})
         match (to:CWE{CWE_ID:line.CWE_ID})
         MERGE (from)-[r:hasRelatedWeaknesses]->(to)
         MERGE (to)-[r1:hasRelatedVulnerability]->(from)'''
-        create_CWE_CAPEC_Relation_cypher.replace("file:///Origin/Relation/CWE_contact_CAPEC.csv",CWE_contact_CAPEC)
+        # create_CWE_CAPEC_Relation_cypher.replace("file:///5CDataSet/Edge/CWE_contact_CAPEC.csv",CWE_contact_CAPEC)
 
         print(create_CWE_CAPEC_Relation_cypher)
 

@@ -36,6 +36,10 @@ class CVEEntity:
 
     def __init__(self,configReader):
         self.cveEntityFilePath = configReader["CVE_Entity_File_Path"]
+        # 连接neo4j 数据库
+        # 连接neo4j 数据库
+        self.graph = Graph('http://localhost:7474',
+                           auth=(configReader['neo4j_user_name'], configReader['neo4j_password']))
 
     def loadData(self):
         self.createCVEEntityFromDataSet(self.cveEntityFilePath)
@@ -44,6 +48,9 @@ class CVEEntity:
         print("------------------------start clear CVE Entity------------------------")
         time_start = time.time()
         cypher ="OPTIONAL MATCH(n:CVE) - [r] - () DELETE n, r"
+        graph.run(cypher)
+
+        cypher = "OPTIONAL MATCH(n:CVE) DELETE n"
         graph.run(cypher)
         time_end = time.time()
         print('clear CVE Entity total use time:' + str(time_end - time_start))
@@ -63,9 +70,10 @@ class CVEEntity:
         # 创建cypher语句，使用LOAD CSV可大幅提高数据导入效率
         pre = '''USING PERIODIC COMMIT 5000
         LOAD CSV WITH HEADERS  
-        FROM "file:///CVE_Entity.csv" AS line 
+        FROM "file:///5CDataSet/Node/CVE_Entity.csv" AS line 
         MERGE(p:CVE{'''
-        pre.replace("file:///CVE_Entity.csv",CVE_Entity_file_path)
+        # pre=pre.replace("file:///CVE_Entity.csv",CVE_Entity_file_path)
+        # print(pre)
         end = '''})'''
 
         mid = ""
@@ -103,6 +111,10 @@ class CVEEntity:
         cypher = "OPTIONAL MATCH(n:CVE{CVE_ID=KEY}) - [r] - () DELETE n, r"
         cypher.replace("KEY", CVE_ID)
         graph.run(cypher)
+
+        cypher = "OPTIONAL MATCH(n:CVE{CVE_ID=KEY}) DELETE n"
+        cypher.replace("KEY", CVE_ID)
+        graph.run(cypher)
         time_end = time.time()
         print('clear CVE node total use time:' + str(time_end - time_start))
         print("------------------------delete CVE node:"+CVE_ID+" successfully------------------------")
@@ -129,6 +141,9 @@ class CPEEntity:
     def __init__(self, configReader):
         self.cpeEntityNoQuoteFilePath = configReader["CPE_Entity_No_Quote_File_Path"]
         self.cpeEntityWithQuoteFilePath = configReader["CPE_Entity_With_Quote_File_Path"]
+        # 连接neo4j 数据库
+        self.graph = Graph('http://localhost:7474',
+                           auth=(configReader['neo4j_user_name'], configReader['neo4j_password']))
 
     def loadData(self):
         self.createCPEEntityFromDataSet(self.cpeEntityNoQuoteFilePath, self.cpeEntityWithQuoteFilePath)
@@ -137,6 +152,9 @@ class CPEEntity:
         print("------------------------start clear CPE Entity------------------------")
         time_start = time.time()
         cypher ="OPTIONAL MATCH(n:CPE) - [r] - () DELETE n, r"
+        graph.run(cypher)
+
+        cypher ="OPTIONAL MATCH(n:CPE) DELETE n"
         graph.run(cypher)
         time_end = time.time()
         print('clear CPE Entity total use time:' + str(time_end - time_start))
@@ -155,9 +173,9 @@ class CPEEntity:
         # 创建cypher语句，使用LOAD CSV可大幅提高数据导入效率
         pre = '''USING PERIODIC COMMIT 5000
         LOAD CSV WITH HEADERS  
-        FROM "file:///CPE_Entity_No_Quote.csv" AS line
+        FROM "file:///5CDataSet/Node/CPE_Entity_No_Quote.csv" AS line
         MERGE(p:CPE{'''
-        pre.replace("file:///CPE_Entity_No_Quote.csv", CPE_Entity_no_quote_file_path)
+        # pre.replace("file:///CPE_Entity_No_Quote.csv", CPE_Entity_no_quote_file_path)
         end = '''})'''
 
         mid = ""
@@ -203,6 +221,10 @@ class CPEEntity:
         cypher = "OPTIONAL MATCH(n:CPE{cpe23Uri=KEY}) - [r] - () DELETE n, r"
         cypher.replace("KEY", cpe23Uri)
         graph.run(cypher)
+
+        cypher = "OPTIONAL MATCH(n:CPE{cpe23Uri=KEY}) DELETE n"
+        cypher.replace("KEY", cpe23Uri)
+        graph.run(cypher)
         time_end = time.time()
         print('delete CPE node total use time:' + str(time_end - time_start))
         print("------------------------delete CPE node:"+cpe23Uri+" successfully------------------------")
@@ -231,6 +253,9 @@ class CWEEntity:
 
     def __init__(self,configReader):
         self.cweEntityFilePath = configReader["CWE_Entity_File_Path"]
+        # 连接neo4j 数据库
+        self.graph = Graph('http://localhost:7474',
+                           auth=(configReader['neo4j_user_name'], configReader['neo4j_password']))
 
     def loadData(self):
         self.createCWEEntityFromDataSet(self.cweEntityFilePath)
@@ -239,6 +264,8 @@ class CWEEntity:
         print("------------------------start clear CWE Entity------------------------")
         time_start = time.time()
         cypher ="OPTIONAL MATCH(n:CWE) - [r] - () DELETE n, r"
+        graph.run(cypher)
+        cypher = "OPTIONAL MATCH(n:CWE) DELETE n"
         graph.run(cypher)
         time_end = time.time()
         print('clear CWE Entity total use time:' + str(time_end - time_start))
@@ -257,9 +284,9 @@ class CWEEntity:
         # 创建cypher语句，使用LOAD CSV可大幅提高数据导入效率
         pre = '''USING PERIODIC COMMIT 5000
                         LOAD CSV WITH HEADERS  
-                        FROM "file:///CWE_Entity.csv" AS line 
+                        FROM "file:///5CDataSet/Node/CWE_Entity.csv" AS line 
                         MERGE(p:CWE{'''
-        pre.replace("file:///CWE_Entity.csv", CWE_Entity_file_path)
+        # pre.replace("file:///CWE_Entity.csv", CWE_Entity_file_path)
 
         end = '''})'''
 
@@ -282,6 +309,9 @@ class CWEEntity:
         time_start = time.time()
         cypher ="OPTIONAL MATCH(n:CWE{CWE_ID=KEY}) - [r] - () DELETE n, r"
         cypher.replace("KEY",CWE_ID)
+        graph.run(cypher)
+        cypher = "OPTIONAL MATCH(n:CWE{CWE_ID=KEY}) DELETE n"
+        cypher.replace("KEY", CWE_ID)
         graph.run(cypher)
         time_end = time.time()
         print('clear CWE node total use time:' + str(time_end - time_start))
@@ -313,6 +343,9 @@ class CAPECEntity:
 
     def __init__(self,configReader):
         self.capecEntityFilePath = configReader["CAPEC_Entity_File_Path"]
+        # 连接neo4j 数据库
+        self.graph = Graph('http://localhost:7474',
+                           auth=(configReader['neo4j_user_name'], configReader['neo4j_password']))
 
     def loadData(self):
         self.createCAPECEntityFromDataSet(self.capecEntityFilePath)
@@ -321,6 +354,8 @@ class CAPECEntity:
         print("------------------------start clear CAPEC Entity------------------------")
         time_start = time.time()
         cypher ="OPTIONAL MATCH(n:CAPEC) - [r] - () DELETE n, r"
+        graph.run(cypher)
+        cypher = "OPTIONAL MATCH(n:CAPEC)DELETE n"
         graph.run(cypher)
         time_end = time.time()
         print('clear CAPEC Entity total use time:' + str(time_end - time_start))
@@ -331,17 +366,17 @@ class CAPECEntity:
         print("\n", "------------------------start create CAPEC Entity------------------------")
         time_start = time.time()
         # 提取CAPEC实体的各个属性
-        CVE = pd.read_csv(CAPEC_Entity_file_path, encoding='UTF-8')
-        columns = CVE.columns.values.tolist()
-        columns.remove('CWE_ID')
+        CAPEC = pd.read_csv(CAPEC_Entity_file_path, encoding='UTF-8')
+        columns = CAPEC.columns.values.tolist()
         print(columns)
 
         # 创建cypher语句，使用LOAD CSV可大幅提高数据导入效率
         pre = '''USING PERIODIC COMMIT 5000
         LOAD CSV WITH HEADERS  
-        FROM "file:///CAPEC_Entity.csv" AS line 
-        MERGE(p:CVE{'''
-        pre.replace("file:///CAPEC_Entity.csv",CAPEC_Entity_file_path)
+        FROM "file:///5CDataSet/Node/CAPEC_Entity.csv" AS line 
+        MERGE(p:CAPEC{'''
+
+        # pre.replace("file:///CAPEC_Entity.csv",CAPEC_Entity_file_path)
 
         end = '''})'''
 
@@ -350,11 +385,13 @@ class CAPECEntity:
             temp = i + ':line.' + i + ','
             mid = mid + temp
         mid = mid[:-1]
+        # print(mid)
 
         create_node_cypher = pre + mid + end
         print(create_node_cypher)
 
         graph.run(create_node_cypher)
+
 
         time_end = time.time()
         print('create CAPEC Entity total use time:' + str(time_end - time_start))
@@ -364,6 +401,9 @@ class CAPECEntity:
         print("------------------------start search CAPEC node:"+CAPEC_ID+"------------------------")
         time_start = time.time()
         cypher = "OPTIONAL MATCH(n:CAPEC{CAPEC_ID=KEY}) - [r] - () DELETE n, r"
+        cypher.replace("KEY", CAPEC_ID)
+        graph.run(cypher)
+        cypher = "OPTIONAL MATCH(n:CAPEC{CAPEC_ID=KEY})DELETE n"
         cypher.replace("KEY", CAPEC_ID)
         graph.run(cypher)
         time_end = time.time()

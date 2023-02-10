@@ -6,8 +6,10 @@ from createEdge import EdgeCreater
 
 
 if __name__ == '__main__':
+    with open("../config.json", "r", encoding="utf8") as f:
+        configReader = json.load(f)
     # 连接neo4j 数据库
-    graph = Graph('http://localhost:7474', auth=('neo4j', '123456'))
+    graph = Graph('http://localhost:7474', auth=(configReader['neo4j_user_name'], configReader['neo4j_password']))
 
     # # 删除已有的所有内容
     # graph.delete_all()
@@ -28,8 +30,6 @@ if __name__ == '__main__':
         print("------------------------unique key already exist------------------------")
         pass
 
-    with open("config.json", "r", encoding="utf8") as f:
-        configReader = json.load(f)
     nodeCreater=NodeCreater(configReader=configReader)
     nodeCreater.loadDataFromDataSet()
     edgeCreater=EdgeCreater(configReader=configReader)

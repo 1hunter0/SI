@@ -6,6 +6,7 @@ from app.api import router_dns
 from app.api import router_file
 from app.api import router_url
 from app.api import router_user
+from app.api import router_5c
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from app.schemas import schema_response

@@ -21,7 +21,11 @@ router_5c = APIRouter(
 def get_graph(node_name: str):
     """
     :param node_name: 节点的名字，通过主码确定，例如"CVE-2006-0207"、"CWE-94"、"CAPEC-111"等
-    :return: nodes_data,links_data 图数据 分别是结点与连接的两个字典列表
+    :return: search_neo4j_data，里面包含nodes_data和links_data 图数据 分别是结点与连接的两个字典列表
+    search_neo4j_data = {
+            'nodes_data': nodes_data,
+            'links_data': links_data
+        }
     """
     try:
         print('start_search:', node_name)

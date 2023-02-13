@@ -57,7 +57,7 @@ def get_file(sha1: str, db: Session = Depends(get_db)):
     try:
         data = SandBox(sha1).parser()
     except Exception as e:
-        print(e)
+        return schema_response.MyResponse(ErrCode=FAIL, ErrMessage="sha值错误")
     file = filehelper(data)
     file_info = crud_file.create_file(db, file)
     if not file_info:

@@ -85,6 +85,12 @@ export const constantRoutes = [
         name: 'Dns',
         component: () => import('@/views/dns/index'),
         meta: { title: 'DNS', icon: 'tree' }
+      },
+      {
+        path: 'files',
+        name: 'Virus',
+        component: () => import('@/views/virus/index'),
+        meta: { title: 'Virus', icon: 'tree' }
       }
     ]
   },

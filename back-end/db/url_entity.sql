@@ -11,7 +11,7 @@
  Target Server Version : 80030 (8.0.30)
  File Encoding         : 65001
 
- Date: 11/11/2022 20:16:02
+ Date: 13/02/2023 16:28:21
 */
 
 SET NAMES utf8mb4;
@@ -26,7 +26,8 @@ CREATE TABLE `url_entity` (
   `history_dns` varchar(255) DEFAULT NULL COMMENT '历史dns',
   `severity` tinyint DEFAULT NULL COMMENT '威胁等级',
   `id` int NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `url` (`url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

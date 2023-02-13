@@ -107,7 +107,7 @@ def update_graph(sha1: str):
     )
     
 ################
-#从图数据库返回文件网络信息 api  
+#从图数据库根据文件sha 返回文件网络信息 api  
 @router_file.get("/getnetgraph", response_model=schema_response.MyResponse)
 def get_graph(sha: str):
     """

@@ -1,15 +1,12 @@
-fastapi==0.85.0
+fastapi==0.91.0
 jose==1.0.0
 MySQL-python==1.2.5
+pandas==1.5.3
 passlib==1.7.4
 py2neo==2021.2.3
 pydantic==1.9.1
 PyMySQL==1.0.2
-python_jose==3.2.0
 requests==2.28.1
 SQLAlchemy==1.4.39
+SQLAlchemy_Utils==0.39.0
 uvicorn==0.18.2
-SQLAlchemy-Utils==0.38.3
-bcrypt == 4.0.1
-python-multipart == 0.0.5
-

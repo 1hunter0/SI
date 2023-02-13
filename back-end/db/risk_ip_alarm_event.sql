@@ -11,7 +11,7 @@
  Target Server Version : 80030 (8.0.30)
  File Encoding         : 65001
 
- Date: 13/02/2023 16:28:04
+ Date: 13/02/2023 16:38:04
 */
 
 SET NAMES utf8mb4;
@@ -29,8 +29,8 @@ CREATE TABLE `risk_ip_alarm_event` (
   `reason` varchar(255) DEFAULT NULL COMMENT '高风险原因',
   PRIMARY KEY (`event_id`),
   UNIQUE KEY `risk_unique_ipsub_ipobj_attacktype` (`ip_subject`,`ip_object`,`attack_type`),
-  KEY `ix_risk_ip_alarm_event_ip_object` (`ip_object`),
   KEY `ix_risk_ip_alarm_event_ip_subject` (`ip_subject`),
+  KEY `ix_risk_ip_alarm_event_ip_object` (`ip_object`),
   CONSTRAINT `risk_ip_alarm_event_ibfk_1` FOREIGN KEY (`ip_subject`) REFERENCES `ip_entity` (`ip`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `risk_ip_alarm_event_ibfk_2` FOREIGN KEY (`ip_object`) REFERENCES `ip_entity` (`ip`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

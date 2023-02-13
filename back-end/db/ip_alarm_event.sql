@@ -11,7 +11,7 @@
  Target Server Version : 80030 (8.0.30)
  File Encoding         : 65001
 
- Date: 13/02/2023 16:27:46
+ Date: 13/02/2023 16:37:54
 */
 
 SET NAMES utf8mb4;
@@ -25,6 +25,7 @@ CREATE TABLE `ip_alarm_event` (
   `event_id` int NOT NULL AUTO_INCREMENT,
   `ip_subject` varchar(255) NOT NULL COMMENT '攻击者ip',
   `ip_object` varchar(255) NOT NULL COMMENT '受害者ip',
+  `attack_type` varchar(255) DEFAULT NULL COMMENT '攻击类型及编号',
   `dev_info` varchar(255) NOT NULL COMMENT '告警来源设备',
   `hostname` varchar(255) NOT NULL COMMENT '告警来源ip',
   `timestamp` timestamp NOT NULL COMMENT '告警发生时间',
@@ -38,11 +39,9 @@ CREATE TABLE `ip_alarm_event` (
   `threat_phase` varchar(255) DEFAULT NULL COMMENT '威胁的阶段',
   `kill_chain` varchar(255) DEFAULT NULL COMMENT '单个杀伤链',
   `kill_chain_all` varchar(255) DEFAULT NULL COMMENT '全杀伤链',
-  `attack_type` varchar(255) DEFAULT NULL COMMENT '攻击类型及编号',
-  `attack_type_all` varchar(255) DEFAULT NULL COMMENT '攻击类型及编号',
-  `att_ck_all` varchar(255) DEFAULT NULL COMMENT '攻击类型及编号',
-  `att_ck` varchar(255) DEFAULT NULL COMMENT '攻击类型及编号',
+  `count` int DEFAULT NULL,
   PRIMARY KEY (`event_id`),
+  UNIQUE KEY `unique_ipsub_ipobj_attacktype` (`ip_subject`,`ip_object`,`attack_type`),
   KEY `ix_ip_alarm_event_ip_subject` (`ip_subject`),
   KEY `ix_ip_alarm_event_ip_object` (`ip_object`),
   CONSTRAINT `ip_alarm_event_ibfk_1` FOREIGN KEY (`ip_subject`) REFERENCES `ip_entity` (`ip`) ON DELETE RESTRICT ON UPDATE RESTRICT,

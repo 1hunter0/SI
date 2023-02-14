@@ -52,15 +52,15 @@
         :id="item.name" class="my-main-container">
         <el-container class="top-container">
           <el-aside width="300px" class="logo">
-            <img :src="item.content.IpInfo.ip | logoFilter" class="logo-content">
+            <img :src="item.content.VirusInfo.sha1 | logoFilter" class="logo-content">
             <div class="logo-footer">
               <div class="risk">
                 <div class="title">风险评估</div>
-                <div :class="item.content.IpInfo.ip | levelClassFilter">{{ item.content.IpInfo.ip | levelFilter }}</div>
+                <div :class="item.content.VirusInfo.sha1 | levelClassFilter">{{ item.content.VirusInfo.sha1 | levelFilter }}</div>
               </div>
               <div class="degree">
                 <div class="title">置信度</div>
-                <div class="value" style="color: #2b2c2d">{{ item.content.IpInfo.ip | confidenceFilter }}</div>
+                <div class="value" style="color: #2b2c2d">{{ item.content.VirusInfo.sha1 | confidenceFilter }}</div>
               </div>
             </div>
           </el-aside>
@@ -70,7 +70,7 @@
                 <div class="name">
                   <div class="title">FILE</div>
                   <span class="content">
-                    {{ item.content.IpInfo.ip }}
+                    {{ item.content.VirusInfo.sha1 }}
                   </span>
                   <el-tooltip effect="dark" content="复制" placement="top"><i class="el-icon-copy-document copy"
                       v-clipboard:copy="item.name" v-clipboard:success="onCopySuccess"
@@ -81,7 +81,7 @@
                   <el-tooltip effect="dark" content="情报标签命中恶意家族或攻击团伙仅表示历史上曾用过该基础设施，不作为决策依据，仅供参考" placement="top"><span
                       class="my-icon"><i class="el-icon-zoom-in tag-tip"></i></span></el-tooltip>
                   <div class="content">
-                    <el-tag v-for="(origin, index1) in tagFilter(item.content.IpInfo.ip)"
+                    <el-tag v-for="(origin, index1) in tagFilter(item.content.VirusInfo.sha1)"
                       :type="origin | tagClassFilter" :key="index1" effect="plain" size="mini">{{ origin }}</el-tag>
                   </div>
                 </div>
@@ -94,17 +94,17 @@
                 icon="el-icon-search"-->
                 <span class="label-wrap">文件类型</span>
                 <div class="value-wrap">
-                  {{ item.content.IpInfo.country }}-{{ item.content.IpInfo.province }}-{{ item.content.IpInfo.city }}</div>
+                  {{ item.content.VirusInfo.file_type }}</div>
               </div>
               <div class="item-wrap">
                 <i class="el-icon-time"></i>
                 <span class="label-wrap">提交时间</span>
-                <div class="value-wrap">{{ item.content.IpInfo.longitude }}-{{ item.content.IpInfo.latitude }}</div>
+                <div class="value-wrap">{{ item.content.VirusInfo.submit_time }}</div>
               </div>
               <div class="item-wrap">
                 <svg-icon icon-class="sponer" />
-                <span class="label-wrap">运营商</span>
-                <div class="value-wrap">{{ item.content.IpInfo.isp }}</div>
+                <span class="label-wrap">威胁等级</span>
+                <div class="value-wrap">{{ item.content.VirusInfo.threat_level }}</div>
               </div>
             </el-main>
           </el-container>
@@ -114,48 +114,32 @@
             <el-tabs v-model="item.activeName" type="card">
               <el-tab-pane name="first">
                 <span slot="label">
-                  <el-tooltip effect="dark" content="该ip作为主动方的所有告警日志" placement="top"><span>基本信息</span></el-tooltip>
+                  <el-tooltip effect="dark" content="该病毒文件的基本信息" placement="top"><span>基本信息</span></el-tooltip>
                 </span>
                 <el-table :data="item.firstPage.dataList" fit border height="350" highlight-current-row>
-                  <el-table-column label="ip_subject" align="center" width="120" fixed>
+                  <el-table-column label="multi_engines" align="center" width="180" fixed>
                     <template slot-scope="scope">
-                      {{ scope.row.ip_subject }}
+                      {{ scope.row.VirusInfo.multi_engines }}
                     </template>
                   </el-table-column>
-                  <el-table-column label="ip_object" align="center" width="120">
+                  <el-table-column label="multiengines_results" align="center" width="180">
                     <template slot-scope="scope">
-                      {{ scope.row.ip_object }}
+                      {{ scope.row.VirusInfo.multiengines_results }}
                     </template>
                   </el-table-column>
-                  <el-table-column label="dev_info" align="center" width="150">
+                  <el-table-column label="sandbox_behaviors" align="center" width="180">
                     <template slot-scope="scope">
-                      {{ scope.row.dev_info }}
+                      {{ scope.row.VirusInfo.sandbox_behaviors }}
                     </template>
                   </el-table-column>
-                  <el-table-column label="timestamp" align="center" width="180">
+                  <el-table-column label="sandbox_type_list" align="center" width="180">
                     <template slot-scope="scope">
-                      <i class="el-icon-time"></i>
-                      {{ scope.row.timestamp }}
+                      {{ scope.row.VirusInfo.sandbox_type_list }}
                     </template>
                   </el-table-column>
-                  <el-table-column label="dev_category" align="center" width="150">
+                  <el-table-column label="threat_score" align="center" width="180">
                     <template slot-scope="scope">
-                      {{ scope.row.dev_category }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="dev_rule" align="center" width="300">
-                    <template slot-scope="scope">
-                      {{ scope.row.dev_rule }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="degree" align="center" width="80">
-                    <template slot-scope="scope">
-                      <el-tag :type="scope.row.degree | degreeClassFilter">{{ scope.row.degree }}</el-tag>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="hostname" align="center" width="150">
-                    <template slot-scope="scope">
-                      {{ scope.row.hostname }}
+                      {{ scope.row.VirusInfo.threat_score }}
                     </template>
                   </el-table-column>
                 </el-table>
@@ -164,68 +148,11 @@
                   @current-change="fetchFirstData($event, item)" />
 
               </el-tab-pane>
-              <el-tab-pane name="second">
-                <span slot="label">
-                  <el-tooltip effect="dark" content="该ip作为被动方的所有告警日志" placement="top"><span>家族团伙</span></el-tooltip>
-                </span>
-                <el-table :data="item.secondPage.dataList" fit border height="350" highlight-current-row>
-                  <el-table-column label="ip_object" align="center" width="120" fixed>
-                    <template slot-scope="scope">
-                      {{ scope.row.ip_object }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="ip_subject" align="center" width="120">
-                    <template slot-scope="scope">
-                      {{ scope.row.ip_subject }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="dev_info" align="center" width="150">
-                    <template slot-scope="scope">
-                      {{ scope.row.dev_info }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="timestamp" align="center" width="180">
-                    <template slot-scope="scope">
-                      <i class="el-icon-time"></i>
-                      {{ scope.row.timestamp }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="dev_category" align="center" width="150">
-                    <template slot-scope="scope">
-                      {{ scope.row.dev_category }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="dev_rule" align="center" width="300">
-                    <template slot-scope="scope">
-                      {{ scope.row.dev_rule }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="degree" align="center" width="80">
-                    <template slot-scope="scope">
-                      <el-tag :type="scope.row.degree | degreeClassFilter">{{ scope.row.degree }}</el-tag>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="hostname" align="center" width="150">
-                    <template slot-scope="scope">
-                      {{ scope.row.hostname }}
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <el-pagination v-show="item.secondPage.total > 0" :total="item.secondPage.total"
-                  :current-page="item.secondPage.page" :page-size="item.secondPage.limit"
-                  @current-change="fetchSecondData($event, item)" />
-              </el-tab-pane>
-              <el-tab-pane name="third">
-                <span slot="label">
-                  <el-tooltip effect="dark" content="与此ip有关的所有样本" placement="top"><span>行为分析</span></el-tooltip>
-                </span>
-                与此ip有关的所有样本
-              </el-tab-pane>
               <el-tab-pane name="forth">
                 <span slot="label">
-                  <el-tooltip effect="dark" content="该ip的关联图" placement="top"><span>Graph</span></el-tooltip>
+                  <el-tooltip effect="dark" content="该病毒文件的关联图" placement="top"><span>Graph</span></el-tooltip>
                 </span>
-                该ip的关联图
+                该病毒文件的关联图
               </el-tab-pane>
             </el-tabs>
           </el-main>
@@ -275,24 +202,24 @@ export default {
       }
       return levelToLogo[level]
     },
-    levelFilter(ip) { // todo(tanrenxuan): replace with our field
-      let level = ip.length % 2 // 0: 安全 1：危险
+    levelFilter(sha1) { // todo(tanrenxuan): replace with our field
+      let level = sha1.length % 2 // 0: 安全 1：危险
       const levelToDescription = {
         0: "安全",
         1: "危险",
       }
       return levelToDescription[level]
     },
-    levelClassFilter(ip) { // todo(tanrenxuan): replace with our field
-      let level = ip.length % 2 // 0: 安全 1：危险
+    levelClassFilter(sha1) { // todo(tanrenxuan): replace with our field
+      let level = sha1.length % 2 // 0: 安全 1：危险
       const levelToClass = {
         0: "safe",
         1: "danger"
       }
       return [levelToClass[level], 'value']
     },
-    confidenceFilter(ip) { // todo(tanrenxuan): replace with our field
-      let confidence = ip.length % 3 // 0: 低 1:中 2:高
+    confidenceFilter(sha1) { // todo(tanrenxuan): replace with our field
+      let confidence = sha1.length % 3 // 0: 低 1:中 2:高
       const confidenceToDescription = {
         0: "低",
         1: "中",
@@ -366,10 +293,10 @@ export default {
         this.tabs.activeName = sha1
         return
       }
-      // fetch ip details
+      // fetch virus details
       this.tabs.detailTabs.push({
-        title: ip + '详情',
-        name: ip,
+        title: sha1 + '详情',
+        name: sha1,
         activeName: 'first',
         firstPage: {
           page: 1,  // 默认是第一页
@@ -377,44 +304,31 @@ export default {
           total: 0,  // 总共有多少条记录
           dataList: []
         },
-        secondPage: {
-          page: 1,  // 默认是第一页
-          limit: 5,  // 每一页多少条记录
-          total: 0,  // 总共有多少条记录
-          dataList: []
-        },
-        thirdPage: {
-          page: 1,  // 默认是第一页
-          limit: 5,  // 每一页多少条记录
-          total: 0,  // 总共有多少条记录
-          dataList: []
-        },
         content: {
-          IpInfo: {
-            ip: '',
-            country: '',
-            province: '',
-            city: '',
-            isp: '',
-            latitude: '',
-            longitude: '',
-          },
-          Alarms: {
-            subject_alarms: [],
-            object_alarms: [],
-          },
+          VirusInfo: {
+            sha1: '',
+            file_name: '',
+            file_type: '',
+            id: '',
+            md5: '',
+            multi_engines: '',
+            multiengines_results: '',
+            sandbox_behaviors: '',
+            sandbox_type_list: '',
+            submit_time: '',
+            threat_level: '', 
+            threat_score: ''
+          }
         } // loading time is too long, just show the tab first and then fetch data
       })
-      this.tabs.activeName = ip
+      this.tabs.activeName = sha1
       this.$nextTick(function () {
-        let loading = this.startLoading(document.getElementById(ip))
-        getVirusInfo(ip).then(response => {
+        let loading = this.startLoading(document.getElementById(sha1))
+        getVirusInfo(sha1).then(response => {
           let currTab = this.tabs.detailTabs[this.tabs.detailTabs.length - 1]
-          currTab.content = response.Data
-          currTab.firstPage.total = currTab.content.Alarms.subject_alarms.length
-          currTab.firstPage.dataList = this.fetchDataFromTab(currTab.firstPage, currTab.content.Alarms.subject_alarms)
-          currTab.secondPage.total = currTab.content.Alarms.object_alarms.length
-          currTab.secondPage.dataList = this.fetchDataFromTab(currTab.secondPage, currTab.content.Alarms.object_alarms)
+          currTab.content = {VirusInfo: response.Data}
+          currTab.firstPage.total = currTab.content.length
+          currTab.firstPage.dataList = [currTab.content]
           loading.close()
         }).catch(err => {
           // nothing to do...
@@ -436,11 +350,6 @@ export default {
       currTab.firstPage.dataList = this.fetchDataFromTab(currTab.firstPage, currTab.content.Alarms.subject_alarms)
     },
 
-    fetchSecondData(val, currTab) {
-      currTab.secondPage.page = val
-      currTab.secondPage.dataList = this.fetchDataFromTab(currTab.secondPage, currTab.content.Alarms.object_alarms)
-    },
-
     removeTab(targetName) {
       let tabList = this.tabs.detailTabs
       // re-calculator the activeName
@@ -452,7 +361,7 @@ export default {
             if (nextTab) {
               currActiveName = nextTab.name
             } else {
-              currActiveName = 'ipListPage'
+              currActiveName = 'virusListPage'
             }
           }
         })
@@ -468,9 +377,9 @@ export default {
       this.$message.error("复制失败");
     },
 
-    tagFilter(ip) {
+    tagFilter(sha1) {
       const originLst = ['蜜罐', '日志易-waf', '日志易-云澈', '外生']
-      let index = ip.length % 4
+      let index = sha1.length % 4
       return [originLst[index], originLst[(index + 2) % 4]]
     },
   },

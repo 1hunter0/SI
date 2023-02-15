@@ -31,7 +31,7 @@ async def check_token(request: Request, call_next):
     if path.startswith('/users/login') | path.startswith('/users/info') | path.startswith(
             '/users/register') | path.startswith(
         '/docs') | path.startswith('/openapi.json') | path.startswith('/ips/upload') | path.startswith(
-        '/test'):  # docs文档接口需要排除，登录接口需要排除,注册接口需要排除
+        '/test') | path.startswith('/files/getnetgraph'):  # docs文档接口需要排除，登录接口需要排除,注册接口需要排除
         response = await call_next(request)
         return response
     else:

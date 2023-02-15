@@ -40,6 +40,14 @@ def model2alarmlist(ipalarm):
     return alarmlist
 
 
+def model2riskalarmlist(riskalarm):
+    riskalarmlist = []
+    for alarm in riskalarm:
+        thedict = serialize(alarm)
+        riskalarmlist.append(schema_ip.RiskAlarm(**thedict))
+    return riskalarmlist
+
+
 @router_ip.get("/info", response_model=schema_response.MyResponse)
 def get_file(ip: str, db: Session = Depends(get_db)):
     """
@@ -59,10 +67,16 @@ def get_file(ip: str, db: Session = Depends(get_db)):
     sub_list = model2alarmlist(ipalarm_sub)
     obj_list = model2alarmlist(ipalarm_obj)
     alarm_list = schema_ip.IpInner(subject_alarms=sub_list, object_alarms=obj_list)
+
     sample_list = None
     # todo add sample_list
+
+    # 与当前ip相关的系统高危报警
+    risk_alarms = crud_ip.get_ip_relevant_risk_alarm(db, ip)
+    risk_alarmslist = model2riskalarmlist(risk_alarms)
     ip_merged = schema_ip.IPInfoResponse(Alarms=alarm_list, Sample=sample_list,
-                                         IpInfo=schema_ip.IpBase(**serialize(ip_info)))
+                                         IpInfo=schema_ip.IpBase(**serialize(ip_info)),
+                                         RelevantRiskAlarmsList=risk_alarmslist)
 
     return schema_response.MyResponse(
         ErrCode=SUCCESS,

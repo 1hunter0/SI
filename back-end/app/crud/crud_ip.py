@@ -96,9 +96,9 @@ def get_ip_relevant_alarm(db: Session, ip: str):
 
 def get_ip_relevant_risk_alarm(db: Session, ip: str):
     try:
-        query_res_sub = db.query(model_ip.RiskIpAlarmEvent).filter(model_ip.RiskIpAlarmEvent.ip_subject == ip).all()
-        query_res_obj = db.query(model_ip.RiskIpAlarmEvent).filter(model_ip.RiskIpAlarmEvent.ip_object == ip).all()
-        return query_res_sub, query_res_obj
+        query_res_sub = db.query(model_ip.RiskIpAlarmEvent).filter(model_ip.RiskIpAlarmEvent.ip_subject == ip)
+        query_res_obj = db.query(model_ip.RiskIpAlarmEvent).filter(model_ip.RiskIpAlarmEvent.ip_object == ip)
+        return query_res_sub.union(query_res_obj).all()
     except Exception as e:
         print(e)
 

@@ -66,6 +66,7 @@ class IPInfoResponse(BaseModel):
     IpInfo: IpBase = None
     Alarms: IpInner = None
     Samples: FileBase = None
+    RelevantRiskAlarmsList: List[RiskAlarm] = None
 
 
 class IpListResponse(BaseModel):
@@ -82,8 +83,6 @@ class RiskAlarmListResponse(BaseModel):
 
 class PageResponse(BaseModel):
     PageNumber: int
-
-
 
 
 class TopkAttckTypeResponse(BaseModel):
